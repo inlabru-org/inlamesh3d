@@ -18,7 +18,7 @@ You can install the development version from
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("finnlindgren/inlamesh3d")
+remotes::install_github("finnlindgren/inlamesh3d", build_vignettes = TRUE)
 ```
 
 ## Example
@@ -49,7 +49,7 @@ str(mesh)
 #> List of 4
 #>  $ manifold: chr "R3"
 #>  $ n       : int 4
-#>  $ loc     : num [1:4, 1:3] -0.00116 -0.77377 -0.21424 0.01968 -0.19294 ...
+#>  $ loc     : num [1:4, 1:3] -0.0805 -0.4462 0.7394 1.1667 0.0331 ...
 #>  $ graph   :List of 1
 #>   ..$ tv: int [1, 1:4] 1 3 4 2
 #>  - attr(*, "class")= chr "inla_mesh_3d"
