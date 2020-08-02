@@ -1,0 +1,48 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# inlamesh3d
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The goal of inlamesh3d is to add 3D mesh functionality to INLA.
+When the methods have been tested, they will be incorporated into the main
+package instead.
+
+## Installation
+
+You can install the development version from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("remotes")
+remotes::install_github("finnlindgren/inlamesh3d")
+```
+## Example
+
+You must load `INLA` before loading `inlamesh3d` to get the correct overrides.
+
+```{r example}
+library(INLA)
+library(inlamesh3d)
+loc <- matrix(rnorm(12), 4, 3)
+tv <- geometry::delaunayn(loc)
+mesh <- inla.mesh3d(loc, tv)
+str(mesh)
+```
+New versions of `inla.spde2.matern`, `inla.spde.make.A` and `inla.mesh.fem`
+are now available to use in much the same way as for 2D meshes.
+
+For a full example, see `vignette("spde3d")`.
