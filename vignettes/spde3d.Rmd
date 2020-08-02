@@ -1,0 +1,136 @@
+---
+title: "SPDE models on 3D meshes"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{SPDE models on 3D meshes}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The `inlamesh3d` package is a temporary add-on package for `INLA` to test new
+code for using tetrahedralisation meshes for 3D SPDE models. Load `INLA` first,
+so that the new methods provided by `inlamesh3d` take precedence:
+
+```{r setup}
+library(INLA)
+library(inlamesh3d)
+```
+
+# A simple test case
+
+To test the basic features, we construct a mesh with a single tetrahedron:
+```{r}
+mesh <- inla.mesh3d(rbind(c(0, 0, 0),
+                          c(1, 0, 0),
+                          c(0, 1, 0),
+                          c(0, 0, 1)),
+                    rbind(c(1, 2, 3, 4)))
+```
+The finite element structure matrices can be obtained in the same way as for
+the traditional 2D triangle meshes:
+```{r}
+fem <- inla.mesh.fem(mesh)
+```
+
+We can extract the matrices to construct a precision matrix manually, for
+$(1-\nabla\cdot\nabla)u(s)=\dot{W}(s)$:
+```{r}
+Q <- with(fem, c0 + 2 * g1 + g2)
+solve(Q)
+```
+On a larger 3D domain, this model has an exponential covariance function, but
+with just a single tetrahedron, and Neumann boundary conditions, we should not
+expect to see this in this test case.
+
+The new `param2.matern` method is used to construct the covariance parameter
+prior distribution model, which is then used by the new version of
+`inla.spde2.matern`:
+```{r}
+spde <- inla.spde2.matern(
+  mesh,
+  param = param2.matern(mesh,
+                        alpha = 2,
+                        prior_range = 0.1,
+                        prior_sigma = 1))
+```
+The internal parameterisation used by `param2.matern` is different to the old
+`param2.matern.orig` parameterisation, and is more similar to the one used by
+`inla.spde2.pcmatern`, in that the user-visible aspects are range and standard
+deviation instead of $\tau$ and $\kappa$.
+
+Mapping data locations works the same as before. Here we verify that mapping the mesh vertices themselves produces an identity matrix:
+```{r}
+A <- inla.spde.make.A(mesh, mesh$loc)
+A
+```
+
+# Estimation example
+
+```{r}
+mesh_n <- 1000
+mesh_loc <- matrix(rnorm(mesh_n * 3), mesh_n, 3)
+tetra <- geometry::delaunayn(mesh_loc)
+mesh <- inla.mesh3d(loc = mesh_loc, tv = tetra)
+range0 <- 1 # Prior median range
+sigma0 <- 1 # Prior median standard deviation
+spde <- inla.spde2.matern(
+  mesh,
+  param = param2.matern(mesh,
+                        alpha = 2,
+                        prior_range = range0,
+                        prior_sigma = sigma0))
+```
+
+The parameterisation is in log-range and log-sigma relative to the prior medians, so that
+`theta = log(c(range, sigma) / c(range0, sigma0))` is used to specify the internal parameter vector:
+```{r}
+Q <- inla.spde2.precision(spde, theta = log(c(1.5, 2) / c(range0, sigma0)))
+A0 <- inla.spde.make.A(mesh, cbind(0,0,0))
+D0 <- rowSums(mesh$loc^2)^0.5
+
+ggplot2::ggplot(data.frame(dist = D0,
+                           covariance = as.vector(solve(Q, t(A0))),
+                           exponential = 2^2 * exp(-D0 * (sqrt(8 * 0.5) / 1.5)))) +
+  ggplot2::geom_point(ggplot2::aes(dist, covariance)) +
+  ggplot2::geom_line(ggplot2::aes(dist, exponential), col = "red")
+```
+We can see some boundary effect due to the finite domain but overall the covariances follow the theory.
+
+Let's simulate a field and observe at some locations (here chosen as a subset of the mesh points):
+```{r}
+x <- inla.qsample(1, Q)[, 1]
+loc <- mesh$loc[seq_len(100), , drop = FALSE]
+Aobs <- inla.spde.make.A(mesh, loc)
+data <- data.frame(y = as.vector(Aobs %*% x) + rnorm(nrow(loc), sd = 0.1))
+```
+
+```{r}
+stk <- inla.stack(data = list(y = data$y),
+                  A = list(Aobs),
+                  effects = list(inla.spde.make.index("field", spde$n.spde)))
+est <- inla(y ~ -1 + f(field, model = spde),
+            data = inla.stack.data(stk, spde = spde),
+            control.predictor = list(A = inla.stack.A(stk)),
+            verbose = FALSE)
+```
+Extracting the parameter estimates and transforming them to user-interpretable
+scale:
+```{r}
+quant <- c("0.025quant", "0.5quant", "0.975quant")
+param_estimates <- rbind(
+  range = exp(est$summary.hyperpar["Theta1 for field", quant]) * range0,
+  sigma = exp(est$summary.hyperpar["Theta2 for field", quant]) * sigma0,
+  obs_sigma = as.vector(as.matrix(
+    est$summary.hyperpar["Precision for the Gaussian observations", rev(quant)]^-0.5
+  ))
+)
+param_estimates
+```
+The observation noise standard deviation is underestimated (true value was $0.1$), but the range and sigma parameters recover the true values, $1.5$ and $2$, respectively.
