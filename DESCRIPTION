@@ -20,5 +20,6 @@ Suggests:
     knitr,
     rmarkdown,
     geometry,
-    ggplot2
+    ggplot2,
+    rgl
 VignetteBuilder: knitr

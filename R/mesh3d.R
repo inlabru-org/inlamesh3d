@@ -787,3 +787,80 @@ param2.matern_calc <-
            theta.prior.prec = prior_theta$prec)
     return(param)
   }
+
+
+
+# Plotting
+
+#' @title Draw 3D mesh
+#' @description Draw a 3D mesh with rgl
+#' @param x A `inla_mesh_3d` object
+#' @param include Whether to draw vertices, edges, and triangles, Default: c(FALSE, TRUE, TRUE)
+#' @param alpha Opaqueness of vertices, edges, and triangles, Default: c(0.9, 0.3, 0.1)
+#' @param col Colour of vertices, edges, and triangles, Default: `c("black", "blue", "red")`
+#' @param t_sub A subset of tetrahedron indices to include, Default: NULL
+#' (draw all tetrahedra)
+#' @param size Vertex size, in pixels
+#' @param lwd Edge width, in pixels
+#' @param add If TRUE, adds to an existing `rgl` device, Default: FALSE
+#' @param ... Further parameters passed through to the rgl plotting functions
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @export
+#' @rdname plot.inla_mesh_3d
+
+plot.inla_mesh_3d <- function(x,
+                              include = c(FALSE, TRUE, TRUE),
+                              alpha = c(0.9, 0.3, 0.1),
+                              col = c("black", "blue", "red"),
+                              t_sub =  NULL,
+                              size = 5,
+                              lwd = 2,
+                              add = FALSE, ...) {
+  stopifnot(requireNamespace("rgl", quietly = TRUE))
+  if (!add) {
+    dev <- rgl::open3d()
+    rgl::view3d(0, 0, fov = 0)
+  }
+  else {
+    dev <- NULL
+  }
+  if (is.null(t_sub)) {
+    tetrav <- x$graph$tv
+  } else {
+    tetrav <- x$graph$tv[t_sub, , drop = FALSE]
+  }
+  # Triangles
+  triv <- rbind(tetrav[, -1, drop = FALSE],
+                tetrav[, -2, drop = FALSE],
+                tetrav[, -3, drop = FALSE],
+                tetrav[, -4, drop = FALSE])
+  triv <- unique(t(apply(triv, 1, sort)))
+  # Edges
+  edgev <- rbind(triv[, -1, drop = FALSE],
+                 triv[, -2, drop = FALSE],
+                 triv[, -3, drop = FALSE])
+  edgev <- unique(t(apply(edgev, 1, sort)))
+  # Plot
+  triv <- as.vector(t(triv))
+  edgev <- as.vector(t(edgev))
+  if (include[3]) {
+    rgl::triangles3d(x$loc[triv, , drop = FALSE],
+                     lwd = lwd, color = col[3], alpha = alpha[3], ...)
+  }
+  if (include[2]) {
+    rgl::lines3d(x$loc[edgev, , drop = FALSE],
+                 lwd = lwd, color = col[2], alpha = alpha[2], ...)
+  }
+  if (include[1]) {
+    idx <- unique(as.vector(tetrav))
+    rgl::points3d(x$loc[idx, , drop = FALSE],
+                  size = size, lwd = lwd, color = col[1], alpha = alpha[1],
+                  ...)
+  }
+}
+
