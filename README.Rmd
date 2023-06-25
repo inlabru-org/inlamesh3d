@@ -22,6 +22,10 @@ The goal of `inlamesh3d` is to add 3D mesh functionality to INLA.
 When the methods have been tested, they will be incorporated into the main
 package instead.
 
+For online documentation,
+see [https://inlabru-org.github.io/inlamesh3d/](https://inlabru-org.github.io/inlamesh3d/)
+
+
 ## Installation
 
 You can install the development version from [GitHub](https://github.com/) with:

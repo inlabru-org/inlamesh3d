@@ -10,6 +10,9 @@ The goal of `inlamesh3d` is to add 3D mesh functionality to INLA. When
 the methods have been tested, they will be incorporated into the main
 package instead.
 
+For online documentation, see
+<https://inlabru-org.github.io/inlamesh3d/>
+
 ## Installation
 
 You can install the development version from
@@ -41,9 +44,9 @@ str(mesh)
 #> List of 4
 #>  $ manifold: chr "R3"
 #>  $ n       : int 4
-#>  $ loc     : num [1:4, 1:3] 1.2538 0.4494 0.2777 -1.2638 0.0667 ...
+#>  $ loc     : num [1:4, 1:3] -0.6966 -1.6271 -0.2991 -0.0789 -0.2513 ...
 #>  $ graph   :List of 1
-#>   ..$ tv: int [1, 1:4] 3 2 1 4
+#>   ..$ tv: int [1, 1:4] 1 3 4 2
 #>  - attr(*, "class")= chr "inla_mesh_3d"
 ```
 
