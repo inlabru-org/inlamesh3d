@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of inlamesh3d is to add 3D mesh functionality to INLA.
+The goal of `inlamesh3d` is to add 3D mesh functionality to INLA.
 When the methods have been tested, they will be incorporated into the main
 package instead.
 

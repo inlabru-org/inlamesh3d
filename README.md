@@ -6,8 +6,8 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of inlamesh3d is to add 3D mesh functionality to INLA. When the
-methods have been tested, they will be incorporated into the main
+The goal of `inlamesh3d` is to add 3D mesh functionality to INLA. When
+the methods have been tested, they will be incorporated into the main
 package instead.
 
 ## Installation
@@ -53,9 +53,9 @@ str(mesh)
 #> List of 4
 #>  $ manifold: chr "R3"
 #>  $ n       : int 4
-#>  $ loc     : num [1:4, 1:3] -0.217 1.68 -0.126 -0.822 -1.091 ...
+#>  $ loc     : num [1:4, 1:3] 0.3288 -0.3396 0.0141 2.716 0.3583 ...
 #>  $ graph   :List of 1
-#>   ..$ tv: int [1, 1:4] 3 1 2 4
+#>   ..$ tv: int [1, 1:4] 1 3 4 2
 #>  - attr(*, "class")= chr "inla_mesh_3d"
 ```
 
