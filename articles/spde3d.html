@@ -184,36 +184,36 @@ specify the internal parameter vector:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Q</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/INLA/man/inla.spde.precision.html" class="external-link">inla.spde2.precision</a></span><span class="op">(</span><span class="va">spde</span>, theta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.5</span>, <span class="fl">2</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">range0</span>, <span class="va">sigma0</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">A0</span> <span class="op">&lt;-</span> <span class="fu">inlamesh3d</span><span class="fu">::</span><span class="fu"><a href="../reference/inla.spde.make.A.html">inla.spde.make.A</a></span><span class="op">(</span><span class="va">mesh</span>, <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Splitting 1 into L: #T = 3238 #loc = 1</span></span>
-<span><span class="co">#&gt; Splitting 2 into L: #T = 1619 #loc = 1</span></span>
-<span><span class="co">#&gt; Splitting 3 into L: #T = 810 #loc = 1</span></span>
-<span><span class="co">#&gt; Handling: #T = 810, #loc = 1, #loc/#T = 0.00123456790123457</span></span>
-<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.131</span></span>
-<span><span class="co">#&gt; Splitting 3 into R: #T = 809 #loc = 1</span></span>
-<span><span class="co">#&gt; Handling: #T = 809, #loc = 1, #loc/#T = 0.00123609394313968</span></span>
-<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.138</span></span>
-<span><span class="co">#&gt; Splitting 2 into R: #T = 1619 #loc = 1</span></span>
-<span><span class="co">#&gt; Splitting 3 into L: #T = 810 #loc = 1</span></span>
-<span><span class="co">#&gt; Handling: #T = 810, #loc = 1, #loc/#T = 0.00123456790123457</span></span>
-<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.141</span></span>
-<span><span class="co">#&gt; Splitting 3 into R: #T = 809 #loc = 1</span></span>
-<span><span class="co">#&gt; Handling: #T = 809, #loc = 1, #loc/#T = 0.00123609394313968</span></span>
-<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.126</span></span>
-<span><span class="co">#&gt; Splitting 1 into R: #T = 3237 #loc = 1</span></span>
-<span><span class="co">#&gt; Splitting 2 into L: #T = 1619 #loc = 1</span></span>
-<span><span class="co">#&gt; Splitting 3 into L: #T = 810 #loc = 1</span></span>
-<span><span class="co">#&gt; Handling: #T = 810, #loc = 1, #loc/#T = 0.00123456790123457</span></span>
-<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.123</span></span>
-<span><span class="co">#&gt; Splitting 3 into R: #T = 809 #loc = 1</span></span>
-<span><span class="co">#&gt; Handling: #T = 809, #loc = 1, #loc/#T = 0.00123609394313968</span></span>
-<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.131</span></span>
-<span><span class="co">#&gt; Splitting 2 into R: #T = 1618 #loc = 1</span></span>
-<span><span class="co">#&gt; Splitting 3 into L: #T = 809 #loc = 1</span></span>
-<span><span class="co">#&gt; Handling: #T = 809, #loc = 1, #loc/#T = 0.00123609394313968</span></span>
-<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.133</span></span>
-<span><span class="co">#&gt; Splitting 3 into R: #T = 809 #loc = 1</span></span>
-<span><span class="co">#&gt; Handling: #T = 809, #loc = 1, #loc/#T = 0.00123609394313968</span></span>
-<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.127</span></span>
+<span><span class="co">#&gt; Splitting 1 into L: #T = 3224 #loc = 1</span></span>
+<span><span class="co">#&gt; Splitting 2 into L: #T = 1612 #loc = 1</span></span>
+<span><span class="co">#&gt; Splitting 3 into L: #T = 806 #loc = 1</span></span>
+<span><span class="co">#&gt; Handling: #T = 806, #loc = 1, #loc/#T = 0.00124069478908189</span></span>
+<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.0707</span></span>
+<span><span class="co">#&gt; Splitting 3 into R: #T = 806 #loc = 1</span></span>
+<span><span class="co">#&gt; Handling: #T = 806, #loc = 1, #loc/#T = 0.00124069478908189</span></span>
+<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.0707</span></span>
+<span><span class="co">#&gt; Splitting 2 into R: #T = 1612 #loc = 1</span></span>
+<span><span class="co">#&gt; Splitting 3 into L: #T = 806 #loc = 1</span></span>
+<span><span class="co">#&gt; Handling: #T = 806, #loc = 1, #loc/#T = 0.00124069478908189</span></span>
+<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.0732</span></span>
+<span><span class="co">#&gt; Splitting 3 into R: #T = 806 #loc = 1</span></span>
+<span><span class="co">#&gt; Handling: #T = 806, #loc = 1, #loc/#T = 0.00124069478908189</span></span>
+<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.0769</span></span>
+<span><span class="co">#&gt; Splitting 1 into R: #T = 3223 #loc = 1</span></span>
+<span><span class="co">#&gt; Splitting 2 into L: #T = 1612 #loc = 1</span></span>
+<span><span class="co">#&gt; Splitting 3 into L: #T = 806 #loc = 1</span></span>
+<span><span class="co">#&gt; Handling: #T = 806, #loc = 1, #loc/#T = 0.00124069478908189</span></span>
+<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.0707</span></span>
+<span><span class="co">#&gt; Splitting 3 into R: #T = 806 #loc = 1</span></span>
+<span><span class="co">#&gt; Handling: #T = 806, #loc = 1, #loc/#T = 0.00124069478908189</span></span>
+<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.0732</span></span>
+<span><span class="co">#&gt; Splitting 2 into R: #T = 1611 #loc = 1</span></span>
+<span><span class="co">#&gt; Splitting 3 into L: #T = 806 #loc = 1</span></span>
+<span><span class="co">#&gt; Handling: #T = 806, #loc = 1, #loc/#T = 0.00124069478908189</span></span>
+<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.0782</span></span>
+<span><span class="co">#&gt; Splitting 3 into R: #T = 805 #loc = 1</span></span>
+<span><span class="co">#&gt; Handling: #T = 805, #loc = 1, #loc/#T = 0.00124223602484472</span></span>
+<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.0708</span></span>
 <span><span class="va">D0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">mesh</span><span class="op">$</span><span class="va">loc</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">^</span><span class="fl">0.5</span></span>
 <span></span>
 <span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>dist <span class="op">=</span> <span class="va">D0</span>,</span>
@@ -230,36 +230,36 @@ a subset of the mesh points):</p>
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/INLA/man/qsample.html" class="external-link">inla.qsample</a></span><span class="op">(</span><span class="fl">1</span>, <span class="va">Q</span><span class="op">)</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span></span>
 <span><span class="va">loc</span> <span class="op">&lt;-</span> <span class="va">mesh</span><span class="op">$</span><span class="va">loc</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span>, , drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span></span>
 <span><span class="va">Aobs</span> <span class="op">&lt;-</span> <span class="fu">inlamesh3d</span><span class="fu">::</span><span class="fu"><a href="../reference/inla.spde.make.A.html">inla.spde.make.A</a></span><span class="op">(</span><span class="va">mesh</span>, <span class="va">loc</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Splitting 1 into L: #T = 3238 #loc = 99</span></span>
-<span><span class="co">#&gt; Splitting 2 into L: #T = 1619 #loc = 94</span></span>
-<span><span class="co">#&gt; Splitting 3 into L: #T = 810 #loc = 91</span></span>
-<span><span class="co">#&gt; Handling: #T = 810, #loc = 91, #loc/#T = 0.112345679012346</span></span>
-<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.844</span></span>
-<span><span class="co">#&gt; Splitting 3 into R: #T = 809 #loc = 84</span></span>
-<span><span class="co">#&gt; Handling: #T = 809, #loc = 84, #loc/#T = 0.103831891223733</span></span>
-<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.697</span></span>
-<span><span class="co">#&gt; Splitting 2 into R: #T = 1619 #loc = 91</span></span>
-<span><span class="co">#&gt; Splitting 3 into L: #T = 810 #loc = 90</span></span>
-<span><span class="co">#&gt; Handling: #T = 810, #loc = 90, #loc/#T = 0.111111111111111</span></span>
-<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.775</span></span>
-<span><span class="co">#&gt; Splitting 3 into R: #T = 809 #loc = 86</span></span>
-<span><span class="co">#&gt; Handling: #T = 809, #loc = 86, #loc/#T = 0.106304079110012</span></span>
-<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.675</span></span>
-<span><span class="co">#&gt; Splitting 1 into R: #T = 3237 #loc = 98</span></span>
-<span><span class="co">#&gt; Splitting 2 into L: #T = 1619 #loc = 98</span></span>
-<span><span class="co">#&gt; Splitting 3 into L: #T = 810 #loc = 85</span></span>
-<span><span class="co">#&gt; Handling: #T = 810, #loc = 85, #loc/#T = 0.104938271604938</span></span>
-<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.72</span></span>
-<span><span class="co">#&gt; Splitting 3 into R: #T = 809 #loc = 93</span></span>
-<span><span class="co">#&gt; Handling: #T = 809, #loc = 93, #loc/#T = 0.11495673671199</span></span>
-<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.787</span></span>
-<span><span class="co">#&gt; Splitting 2 into R: #T = 1618 #loc = 68</span></span>
-<span><span class="co">#&gt; Splitting 3 into L: #T = 809 #loc = 57</span></span>
-<span><span class="co">#&gt; Handling: #T = 809, #loc = 57, #loc/#T = 0.0704573547589617</span></span>
-<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.582</span></span>
-<span><span class="co">#&gt; Splitting 3 into R: #T = 809 #loc = 64</span></span>
-<span><span class="co">#&gt; Handling: #T = 809, #loc = 64, #loc/#T = 0.0791100123609394</span></span>
-<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.6</span></span>
+<span><span class="co">#&gt; Splitting 1 into L: #T = 3224 #loc = 100</span></span>
+<span><span class="co">#&gt; Splitting 2 into L: #T = 1612 #loc = 91</span></span>
+<span><span class="co">#&gt; Splitting 3 into L: #T = 806 #loc = 77</span></span>
+<span><span class="co">#&gt; Handling: #T = 806, #loc = 77, #loc/#T = 0.0955334987593052</span></span>
+<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.519</span></span>
+<span><span class="co">#&gt; Splitting 3 into R: #T = 806 #loc = 87</span></span>
+<span><span class="co">#&gt; Handling: #T = 806, #loc = 87, #loc/#T = 0.107940446650124</span></span>
+<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.478</span></span>
+<span><span class="co">#&gt; Splitting 2 into R: #T = 1612 #loc = 87</span></span>
+<span><span class="co">#&gt; Splitting 3 into L: #T = 806 #loc = 85</span></span>
+<span><span class="co">#&gt; Handling: #T = 806, #loc = 85, #loc/#T = 0.10545905707196</span></span>
+<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.51</span></span>
+<span><span class="co">#&gt; Splitting 3 into R: #T = 806 #loc = 86</span></span>
+<span><span class="co">#&gt; Handling: #T = 806, #loc = 86, #loc/#T = 0.106699751861042</span></span>
+<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.463</span></span>
+<span><span class="co">#&gt; Splitting 1 into R: #T = 3223 #loc = 96</span></span>
+<span><span class="co">#&gt; Splitting 2 into L: #T = 1612 #loc = 78</span></span>
+<span><span class="co">#&gt; Splitting 3 into L: #T = 806 #loc = 58</span></span>
+<span><span class="co">#&gt; Handling: #T = 806, #loc = 58, #loc/#T = 0.0719602977667494</span></span>
+<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.366</span></span>
+<span><span class="co">#&gt; Splitting 3 into R: #T = 806 #loc = 74</span></span>
+<span><span class="co">#&gt; Handling: #T = 806, #loc = 74, #loc/#T = 0.0918114143920596</span></span>
+<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.45</span></span>
+<span><span class="co">#&gt; Splitting 2 into R: #T = 1611 #loc = 93</span></span>
+<span><span class="co">#&gt; Splitting 3 into L: #T = 806 #loc = 77</span></span>
+<span><span class="co">#&gt; Handling: #T = 806, #loc = 77, #loc/#T = 0.0955334987593052</span></span>
+<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.442</span></span>
+<span><span class="co">#&gt; Splitting 3 into R: #T = 805 #loc = 87</span></span>
+<span><span class="co">#&gt; Handling: #T = 805, #loc = 87, #loc/#T = 0.108074534161491</span></span>
+<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.475</span></span>
 <span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="va">Aobs</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">x</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">loc</span><span class="op">)</span>, sd <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">stk</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/INLA/man/inla.stack.html" class="external-link">inla.stack</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">y</span><span class="op">)</span>,</span>
@@ -290,21 +290,21 @@ user-interpretable scale:</p>
 <tbody>
 <tr class="odd">
 <td align="left">range</td>
-<td align="right">0.7741470</td>
-<td align="right">1.1276503</td>
-<td align="right">1.6844564</td>
+<td align="right">1.2055634</td>
+<td align="right">1.6734812</td>
+<td align="right">2.4192749</td>
 </tr>
 <tr class="even">
 <td align="left">sigma</td>
-<td align="right">1.5758278</td>
-<td align="right">1.8078315</td>
-<td align="right">2.0850800</td>
+<td align="right">1.8885065</td>
+<td align="right">2.1863666</td>
+<td align="right">2.5600923</td>
 </tr>
 <tr class="odd">
 <td align="left">obs_sigma</td>
-<td align="right">0.0035864</td>
-<td align="right">0.0084585</td>
-<td align="right">0.0260916</td>
+<td align="right">0.0037502</td>
+<td align="right">0.0095671</td>
+<td align="right">0.0294619</td>
 </tr>
 </tbody>
 </table>
@@ -362,21 +362,21 @@ range (<code>range</code>) and field standard deviation
 <tbody>
 <tr class="odd">
 <td align="left">range</td>
-<td align="right">0.7588523</td>
-<td align="right">1.1142142</td>
-<td align="right">1.6752677</td>
+<td align="right">1.2049076</td>
+<td align="right">1.6935554</td>
+<td align="right">2.503825</td>
 </tr>
 <tr class="even">
 <td align="left">sigma</td>
-<td align="right">1.5812684</td>
-<td align="right">1.8154292</td>
-<td align="right">2.0943116</td>
+<td align="right">1.8969248</td>
+<td align="right">2.2036386</td>
+<td align="right">2.584993</td>
 </tr>
 <tr class="odd">
 <td align="left">obs_sigma</td>
-<td align="right">0.0036179</td>
-<td align="right">0.0084742</td>
-<td align="right">0.0264044</td>
+<td align="right">0.0035956</td>
+<td align="right">0.0084743</td>
+<td align="right">0.026211</td>
 </tr>
 </tbody>
 </table>
