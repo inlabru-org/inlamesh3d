@@ -4,7 +4,7 @@
 \alias{inla.mesh3d.bary}
 \title{FUNCTION_TITLE}
 \usage{
-inla.mesh3d.bary(mesh, loc)
+inla.mesh3d.bary(mesh, loc, divide_along = 1, t_subset = NULL)
 }
 \arguments{
 \item{mesh}{PARAM_DESCRIPTION}

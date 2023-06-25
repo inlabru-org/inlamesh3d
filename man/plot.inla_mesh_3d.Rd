@@ -12,6 +12,7 @@
   t_sub = NULL,
   size = 5,
   lwd = 2,
+  fill_col = NULL,
   add = FALSE,
   ...
 )

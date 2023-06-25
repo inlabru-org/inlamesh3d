@@ -5,6 +5,7 @@
 \alias{inla.mesh.fem.inla_mesh_3d}
 \alias{inla.mesh.fem.default}
 \alias{inla.mesh3d.fem}
+\alias{inla.mesh3d.volumes}
 \title{FUNCTION_TITLE}
 \usage{
 inla.mesh.fem(mesh, ...)
@@ -14,6 +15,8 @@ inla.mesh.fem(mesh, ...)
 \method{inla.mesh.fem}{default}(mesh, ...)
 
 inla.mesh3d.fem(mesh, ...)
+
+inla.mesh3d.volumes(mesh, ...)
 }
 \arguments{
 \item{mesh}{PARAM_DESCRIPTION}

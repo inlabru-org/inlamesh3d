@@ -36,7 +36,7 @@ mesh <- inla.mesh3d(rbind(c(0, 0, 0),
 The finite element structure matrices can be obtained in the same way as for
 the traditional 2D triangle meshes:
 ```{r}
-fem <- inla.mesh.fem(mesh)
+fem <- inlamesh3d::inla.mesh.fem(mesh)
 ```
 
 We can extract the matrices to construct a precision matrix manually, for
@@ -53,7 +53,7 @@ The new `param2.matern` method is used to construct the covariance parameter
 prior distribution model, which is then used by the new version of
 `inla.spde2.matern`:
 ```{r}
-spde <- inla.spde2.matern(
+spde <- inlamesh3d::inla.spde2.matern(
   mesh,
   param = param2.matern(mesh,
                         alpha = 2,
@@ -67,7 +67,7 @@ deviation instead of $\tau$ and $\kappa$.
 
 Mapping data locations works the same as before. Here we verify that mapping the mesh vertices themselves produces an identity matrix:
 ```{r}
-A <- inla.spde.make.A(mesh, mesh$loc)
+A <- inlamesh3d::inla.spde.make.A(mesh, mesh$loc)
 A
 ```
 
@@ -80,7 +80,7 @@ tetra <- geometry::delaunayn(mesh_loc)
 mesh <- inla.mesh3d(loc = mesh_loc, tv = tetra)
 range0 <- 1 # Prior median range
 sigma0 <- 1 # Prior median standard deviation
-spde <- inla.spde2.matern(
+spde <- inlamesh3d::inla.spde2.matern(
   mesh,
   param = param2.matern(mesh,
                         alpha = 2,
@@ -92,7 +92,7 @@ The parameterisation is in log-range and log-sigma relative to the prior medians
 `theta = log(c(range, sigma) / c(range0, sigma0))` is used to specify the internal parameter vector:
 ```{r}
 Q <- inla.spde2.precision(spde, theta = log(c(1.5, 2) / c(range0, sigma0)))
-A0 <- inla.spde.make.A(mesh, cbind(0,0,0))
+A0 <- inlamesh3d::inla.spde.make.A(mesh, cbind(0,0,0))
 D0 <- rowSums(mesh$loc^2)^0.5
 
 ggplot2::ggplot(data.frame(dist = D0,
@@ -107,7 +107,7 @@ Let's simulate a field and observe at some locations (here chosen as a subset of
 ```{r}
 x <- inla.qsample(1, Q)[, 1]
 loc <- mesh$loc[seq_len(100), , drop = FALSE]
-Aobs <- inla.spde.make.A(mesh, loc)
+Aobs <- inlamesh3d::inla.spde.make.A(mesh, loc)
 data <- data.frame(y = as.vector(Aobs %*% x) + rnorm(nrow(loc), sd = 0.1))
 ```
 
@@ -131,6 +131,55 @@ param_estimates <- rbind(
     est$summary.hyperpar["Precision for the Gaussian observations", rev(quant)]^-0.5
   ))
 )
-param_estimates
+```
+```{r, echo=FALSE}
+knitr::kable(param_estimates)
 ```
 The observation noise standard deviation is underestimated (true value was $0.1$), but the range and sigma parameters recover the true values, $1.5$ and $2$, respectively.
+
+# Plotting
+
+Experimental code:
+
+```{r eval=FALSE}
+plot(mesh)
+```
+
+```{r eval=FALSE}
+locgrid <- as.matrix(expand.grid(1:10, 1:11, 1:12))+rnorm(10*11*12,sd=1e-6)
+meshgrid <- inla.mesh3d(locgrid, geometry::delaunayn(locgrid))
+plot(meshgrid,
+     include = c(0.5, 0.5, 1),
+     alpha=c(0.5, 0.5, 0.9),
+     fill_col = inla.generate.colors(meshgrid$loc)$colors)
+rgl::clipplanes3d(rbind(c(1,0,0), c(0,1,0), c(0,0,1)), d = 0)
+```
+
+# PC prior
+
+Using a PC prior implementation.
+For illustration purposes, we use priors with the true parameter values as prior
+medians for the spatial range (`range`) and field standard deviation (`sigma`).
+
+```{r}
+spde2 <- inlamesh3d::inla.spde2.pcmatern(
+  mesh,
+  alpha = 2,
+  prior.range = c(range0, 0.5),
+  prior.sigma = c(sigma0, 0.5)
+)
+est2 <- inla(y ~ -1 + f(field, model = spde2),
+            data = inla.stack.data(stk, spde2 = spde2),
+            control.predictor = list(A = inla.stack.A(stk)),
+            verbose = FALSE)
+param_estimates2 <- rbind(
+  range = est2$summary.hyperpar["Range for field", quant],
+  sigma = est2$summary.hyperpar["Stdev for field", quant],
+  obs_sigma = as.vector(as.matrix(
+    est2$summary.hyperpar["Precision for the Gaussian observations", rev(quant)]^-0.5
+  ))
+)
+```
+```{r, echo=FALSE}
+knitr::kable(param_estimates2)
+```

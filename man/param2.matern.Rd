@@ -78,11 +78,11 @@ The priors for \code{range} (the spatial correlation range parameter)
 and \code{sigma} (the field standard deviation parameter) are constructed so that
 the prior median is given by \code{median}, and
 \deqn{P(median/factor < param < median*factor) = 0.98}
-which means that the std.dev. of \code{log(param)} is \code{log(factor)/qnorm(0.99)}.
+which means that the std.dev. of \code{log(param)} is \code{log(factor)/stats::qnorm(0.99)}.
 
 Remark: In the old \code{param2.matern.orig} function, the internal parameter
 scale used a default prior precision \eqn{0.1}. This corresponds to
-\code{factor=exp(qnorm((1+0.98)/2)/sqrt(0.1))}, that equals \eqn{1566.435}.
+\code{factor=exp(stats::qnorm((1+0.98)/2)/sqrt(0.1))}, that equals \eqn{1566.435}.
 This large value has lead to numerical and other problems for many models.
 }
 \examples{

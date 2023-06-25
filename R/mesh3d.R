@@ -21,15 +21,15 @@ inla.mesh3d <- function(loc, tv) {
   mesh <- list(
     manifold = "R3",
     n = nrow(loc),
-    loc = loc,
-    graph = list(tv = tv)
+    loc = as.matrix(loc),
+    graph = list(tv = as.matrix(tv))
   )
   class(mesh) <- "inla_mesh_3d"
   mesh
 }
 
 
-# FEM ####
+# FEM ----
 
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION
@@ -147,7 +147,7 @@ inla.mesh3d.fem <- function(mesh, ...) {
   b3 <- row_cross_product(e4, e1)
   b4 <- -row_cross_product(e1, e2)
 
-  g_i <- g_j <- g_x <- c()
+  g_i <- g_j <- g_x <- numeric(nrow(mesh$graph$tv) * 16)
   for (tt in seq_len(nrow(mesh$graph$tv))) {
     GG <- rbind(
       b1[tt, , drop = FALSE],
@@ -155,9 +155,10 @@ inla.mesh3d.fem <- function(mesh, ...) {
       b3[tt, , drop = FALSE],
       b4[tt, , drop = FALSE]
     )
-    g_i <- c(g_i, rep(mesh$graph$tv[tt, ], each = 4))
-    g_j <- c(g_j, rep(mesh$graph$tv[tt, ], times = 4))
-    g_x <- c(g_x, as.vector((GG %*% t(GG)) / vols_t[tt] / 36))
+    ii <- (tt - 1) * 16 + seq_len(16)
+    g_i[ii] <- rep(mesh$graph$tv[tt, ], each = 4)
+    g_j[ii] <- rep(mesh$graph$tv[tt, ], times = 4)
+    g_x[ii] <- as.vector((GG %*% t(GG)) / vols_t[tt] / 36)
   }
   g1 <- Matrix::sparseMatrix(
     i = g_i,
@@ -170,7 +171,33 @@ inla.mesh3d.fem <- function(mesh, ...) {
 }
 
 
-# Barycentric coordinates ####
+#' @rdname inla.mesh.fem
+#' @export
+#' @importFrom Matrix sparseMatrix diag
+inla.mesh3d.volumes <- function(mesh, ...) {
+  v1 <- mesh$loc[mesh$graph$tv[, 1], , drop = FALSE]
+  v2 <- mesh$loc[mesh$graph$tv[, 2], , drop = FALSE]
+  v3 <- mesh$loc[mesh$graph$tv[, 3], , drop = FALSE]
+  v4 <- mesh$loc[mesh$graph$tv[, 4], , drop = FALSE]
+  e1 <- v2 - v1
+  e2 <- v3 - v2
+  e3 <- v4 - v3
+  e4 <- v1 - v4
+  vols_t <- abs(row_volume_product(e1, e2, e3)) / 6
+
+  c0 <- Matrix::sparseMatrix(
+    i = as.vector(mesh$graph$tv),
+    j = as.vector(mesh$graph$tv),
+    x = rep(vols_t / 4, times = 4),
+    dims = c(mesh$n, mesh$n)
+  )
+  vols_v <- Matrix::diag(c0)
+
+  list(t = vols_t, v = vols_v)
+}
+
+
+# Barycentric coordinates ----
 
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION
@@ -221,7 +248,91 @@ inla.spde.make.A.default <- function(mesh, ...) {
 #' @rdname inla.mesh3d.bary
 #' @export
 
-inla.mesh3d.bary <- function(mesh, loc) {
+inla.mesh3d.bary <- function(mesh, loc, divide_along = 1, t_subset = NULL) {
+  stopifnot(inherits(mesh, "inla_mesh_3d"))
+  loc_1 <- rbind(t(loc), 1)
+  bary <- matrix(-Inf, nrow(loc), 4)
+  vt <- integer(nrow(loc))
+  if (is.null(t_subset)) {
+    t_subset <- seq_len(nrow(mesh$graph$tv))
+  }
+  if (length(t_subset) > 1000) {
+    t_order <- order(mesh$loc[mesh$graph$tv[t_subset, 1], divide_along, drop = FALSE])
+
+    t_left <- t_subset[t_order[seq_len(ceiling(length(t_subset) / 2))]]
+    max_left <- max(mesh$loc[as.vector(mesh$graph$tv[t_left, ]), divide_along])
+    loc_left <- which(loc[, divide_along] <= max_left)
+    message(paste0("Splitting ", divide_along,
+                   " into L: #T = ", length(t_left),
+                   " #loc = ", length(loc_left)))
+    bary_left <- inla.mesh3d.bary(
+      mesh,
+      loc[loc_left, , drop = FALSE],
+      divide_along = (divide_along %% 3) + 1,
+      t_subset = t_left
+    )
+
+    idx <- which(apply(bary_left$bary, 1, min) >
+                   apply(bary[loc_left, , drop = FALSE], 1, min))
+    if (length(idx) > 0) {
+      bary[loc_left[idx], ] <- bary_left$bary[idx, , drop = FALSE]
+      vt[loc_left[idx]] <- bary_left$vt[idx]
+    }
+
+    t_right <- setdiff(t_subset, t_left)
+    if (length(t_right) > 0) {
+      min_right <- min(mesh$loc[as.vector(mesh$graph$tv[t_right, ]), divide_along])
+      loc_right <- which(loc[, divide_along] >= min_right)
+      message(paste0("Splitting ", divide_along,
+                     " into R: #T = ", length(t_right),
+                     " #loc = ", length(loc_right)))
+      bary_right <- inla.mesh3d.bary(
+        mesh,
+        loc[loc_right, , drop = FALSE],
+        divide_along = (divide_along %% 3) + 1,
+        t_subset = t_right
+      )
+
+
+      idx <- which(apply(bary_right$bary, 1, min) >
+                     apply(bary[loc_right, , drop = FALSE], 1, min))
+      if (length(idx) > 0) {
+        bary[loc_right[idx], ] <- bary_right$bary[idx, , drop = FALSE]
+        vt[loc_right[idx]] <- bary_right$vt[idx]
+      }
+    }
+
+  } else {
+    message(paste0("Handling: #T = ", length(t_subset),
+                   ", #loc = ", nrow(loc),
+                   ", #loc/#T = ", nrow(loc) / length(t_subset)))
+    time0 <- proc.time()
+    for (tt in t_subset) {
+      loc_t <- mesh$loc[mesh$graph$tv[tt, ], , drop = FALSE]
+      # Barycentric coordinates fulfil
+      # 1) rbind(t(loc), 1) = rbind(t(loc_t), 1) * w
+      # 2) w >= 0
+      try({
+        w <- solve(rbind(t(loc_t), 1), loc_1)
+        idx <- which(apply(w, 2, min) > apply(bary, 1, min))
+        if (length(idx) > 0) {
+          bary[idx, ] <- t(w[, idx, drop = FALSE])
+          vt[idx] <- tt
+        }
+      },
+      silent = TRUE)
+    }
+    time1 <- proc.time()
+    time <- time1 - time0
+    message(paste0(
+      "Handled: Time/(10^3 Tetra) = ",
+      signif(time[1] / (length(t_subset) / 1e3), 3)
+    ))
+  }
+  list(bary = bary, vt = vt)
+}
+
+inla.mesh3d.bary.old <- function(mesh, loc) {
   stopifnot(inherits(mesh, "inla_mesh_3d"))
   loc_1 <- rbind(t(loc), 1)
   bary <- matrix(-Inf, nrow(loc), 4)
@@ -231,6 +342,7 @@ inla.mesh3d.bary <- function(mesh, loc) {
     # Barycentric coordinates fulfil
     # 1) rbind(t(loc), 1) = rbind(t(loc_t), 1) * w
     # 2) w >= 0
+    print(tt)
     w <- solve(rbind(t(loc_t), 1), loc_1)
     idx <- which(apply(w, 2, min) > apply(bary, 1, min))
     if (length(idx) > 0) {
@@ -260,6 +372,8 @@ inla.mesh3d.bary <- function(mesh, loc) {
 #' @importFrom Matrix sparseMatrix
 inla.mesh3d.make.A <- function(mesh, loc, ...) {
   stopifnot(inherits(mesh, "inla_mesh_3d"))
+  mesh$loc <- as.matrix(mesh$loc)
+  loc <- as.matrix(loc)
   bary <- inla.mesh3d.bary(mesh, loc)
   # Accept 0.1% relative distance outside the closest tetrahedron
   ok <- apply(bary$bary, 1, min) > -1e-3
@@ -281,7 +395,7 @@ inla.mesh3d.make.A <- function(mesh, loc, ...) {
 }
 
 
-# SPDE object ####
+# SPDE object ----
 
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION
@@ -298,7 +412,7 @@ inla.mesh3d.make.A <- function(mesh, loc, ...) {
 #' @export
 
 inla.spde2.matern <- function(mesh,
-                          ...) {
+                              ...) {
   UseMethod("inla.spde2.matern", mesh)
 }
 
@@ -365,9 +479,9 @@ inla.spde2.matern3d <-
       deprecated <- deprecated[deprecated %in% names(list(...))]
       if (length(deprecated) > 0) {
         warning(paste("'param' specified;  ",
-          "Ignoring deprecated parameter(s) ",
-          paste(deprecated, collapse = ", "), ".",
-          sep = ""
+                      "Ignoring deprecated parameter(s) ",
+                      paste(deprecated, collapse = ", "), ".",
+                      sep = ""
         ))
       }
     }
@@ -402,8 +516,8 @@ inla.spde2.matern3d <-
         b <- c(1, alpha, alpha * (alpha - 1) / 2)
       } else {
         stop(paste("Unknown fractional.method '", fractional.method,
-          "'.",
-          sep = ""
+                   "'.",
+                   sep = ""
         ))
       }
       B.phi0 <- param$B.tau + (alpha - 2) * param$B.kappa
@@ -423,8 +537,8 @@ inla.spde2.matern3d <-
         b <- c(1, alpha)
       } else {
         stop(paste("Unknown fractional.method '", fractional.method,
-          "'.",
-          sep = ""
+                   "'.",
+                   sep = ""
         ))
       }
       B.phi0 <- param$B.tau + (alpha - 1) * param$B.kappa
@@ -434,8 +548,8 @@ inla.spde2.matern3d <-
       M2 <- fem$g1 * b[2]
     } else {
       stop(paste("Unsupported alpha value (", alpha,
-        "). Supported values are 0 < alpha <= 2",
-        sep = ""
+                 "). Supported values are 0 < alpha <= 2",
+                 sep = ""
       ))
     }
 
@@ -499,10 +613,10 @@ inla.spde2.matern3d <-
             rbind(
               A.constr,
               as.matrix(extraconstr.int$A %*%
-                kronecker(
-                  Matrix::Diagonal(n.iid.group),
-                  fem$c0
-                ))
+                          kronecker(
+                            Matrix::Diagonal(n.iid.group),
+                            fem$c0
+                          ))
             )
         }
         e.constr <- rbind(e.constr, as.matrix(extraconstr.int$e))
@@ -534,7 +648,253 @@ inla.spde2.matern3d <-
   }
 
 
-# Parameter construction ####
+
+
+
+# SPDE with pcmatern priors ----
+
+#' @title Matern SPDE model object with PC prior for INLA
+#'
+#' @description
+#' Create an `inla.spde2` model object for a Matern model, using a PC
+#' prior for the parameters.
+#'
+#' This method constructs a Matern SPDE model, with spatial range \eqn{\rho}
+#' and standard deviation parameter \eqn{\sigma}.  In the parameterisation
+#'
+#' \deqn{(\kappa^2-\Delta)^{\alpha/2}(\tau }{(kappa^2-Delta)^(alpha/2) (tau
+#' x(u)) = W(u)}\deqn{ x(u))=W(u)}{(kappa^2-Delta)^(alpha/2) (tau x(u)) = W(u)}
+#'
+#' the spatial scale parameter \eqn{\kappa=\sqrt{8\nu}/\rho}, where
+#' \eqn{\nu=\alpha-d/2}, and \eqn{\tau} is proportional to \eqn{1/\sigma}.
+#'
+#' Stationary models are supported for \eqn{0 < \alpha \leq 2}{0 < alpha <= 2},
+#' with spectral approximation methods used for non-integer \eqn{\alpha}, with
+#' approximation method determined by `fractional.method`.
+#'
+#' Integration and other general linear constraints are supported via the
+#' `constr`, `extraconstr.int`, and `extraconstr` parameters,
+#' which also interact with `n.iid.group`.
+#'
+#' @details
+#' The joint PC prior density for the spatial range, \eqn{\rho}, and the
+#' marginal standard deviation, \eqn{\sigma}, and is \deqn{ }{p(rho, sigma) =
+#' (d R)/2 rho^(-1-d/2) exp(-R rho^(-d/2)) S exp(-S sigma) }\deqn{ \pi(\rho,
+#' \sigma) = }{p(rho, sigma) = (d R)/2 rho^(-1-d/2) exp(-R rho^(-d/2)) S exp(-S
+#' sigma) }\deqn{ \frac{d \lambda_\rho}{2} \rho^{-1-d/2} \exp(-\lambda_\rho
+#' \rho^{-d/2}) }{p(rho, sigma) = (d R)/2 rho^(-1-d/2) exp(-R rho^(-d/2)) S
+#' exp(-S sigma) }\deqn{ \lambda_\sigma\exp(-\lambda_\sigma \sigma) }{p(rho,
+#' sigma) = (d R)/2 rho^(-1-d/2) exp(-R rho^(-d/2)) S exp(-S sigma) } where
+#' \eqn{\lambda_\rho}{R} and \eqn{\lambda_\sigma}{S} are hyperparameters that
+#' must be determined by the analyst. The practical approach for this in INLA
+#' is to require the user to indirectly specify these hyperparameters through
+#' \deqn{P(\rho < \rho_0) = p_\rho} and \deqn{P(\sigma > \sigma_0) = p_\sigma}
+#' where the user specifies the lower tail quantile and probability for the
+#' range (\eqn{\rho_0} and \eqn{p_\rho}) and the upper tail quantile and
+#' probability for the standard deviation (\eqn{\sigma_0} and
+#' \eqn{\alpha_\sigma}).
+#'
+#' This allows the user to control the priors of the parameters by supplying
+#' knowledge of the scale of the problem. What is a reasonable upper magnitude
+#' for the spatial effect and what is a reasonable lower scale at which the
+#' spatial effect can operate? The shape of the prior was derived through a
+#' construction that shrinks the spatial effect towards a base model of no
+#' spatial effect in the sense of distance measured by Kullback-Leibler
+#' divergence.
+#'
+#' The prior is constructed in two steps, under the idea that having a spatial
+#' field is an extension of not having a spatial field. First, a spatially
+#' constant random effect (\eqn{\rho = \infty}) with finite variance is more
+#' complex than not having a random effect (\eqn{\sigma = 0}). Second, a
+#' spatial field with spatial variation (\eqn{\rho < \infty}) is more complex
+#' than the random effect with no spatial variation. Each of these extensions
+#' are shrunk towards the simpler model and, as a result, we shrink the spatial
+#' field towards the base model of no spatial variation and zero variance
+#' (\eqn{\rho = \infty} and \eqn{\sigma = 0}).
+#'
+#' The details behind the construction of the prior is presented in Fuglstad,
+#' et al. (2016) and is based on the PC prior framework (Simpson, et al.,
+#' 2015).
+#'
+#' @param mesh The mesh to build the model on, as an [inla.mesh()] or
+#' [inla.mesh.1d()] object.
+#' @param alpha Fractional operator order, \eqn{0<\alpha\leq 2}{0 < alpha <= 2}
+#' supported, for \eqn{\nu=\alpha-d/2>0}.
+#' @param param Further model parameters. Not currently used.
+#' @param constr If `TRUE`, apply an integrate-to-zero constraint.
+#' Default `FALSE`.
+#' @param extraconstr.int Field integral constraints.
+#' @param extraconstr Direct linear combination constraints on the basis
+#' weights.
+#' @param fractional.method Specifies the approximation method to use for
+#' fractional (non-integer) `alpha` values. `'parsimonious'` gives an
+#' overall approximate minimal covariance error, `'null'` uses
+#' approximates low-order properties.
+#' @param n.iid.group If greater than 1, build an explicitly iid replicated
+#' model, to support constraints applied to the combined replicates, for
+#' example in a time-replicated spatial model. Constraints can either be
+#' specified for a single mesh, in which case it's applied to the average of
+#' the replicates (`ncol(A)` should be `mesh$n` for 2D meshes,
+#' `mesh$m` for 1D), or as general constraints on the collection of
+#' replicates (`ncol(A)` should be `mesh$n * n.iid.group` for 2D
+#' meshes, `mesh$m * n.iid.group` for 1D).
+#' @param prior.range A length 2 vector, with `(range0,Prange)` specifying
+#' that \eqn{P(\rho < \rho_0)=p_\rho}, where \eqn{\rho} is the spatial range of
+#' the random field. If `Prange` is `NA`, then `range0` is used
+#' as a fixed range value.
+#' @param prior.sigma A length 2 vector, with `(sigma0,Psigma)` specifying
+#' that \eqn{P(\sigma > \sigma_0)=p_\sigma}, where \eqn{\sigma} is the marginal
+#' standard deviation of the field.  If `Psigma` is `NA`, then
+#' `sigma0` is used as a fixed range value.
+#' @return An `inla.spde2` object.
+#' @author Finn Lindgren \email{finn.lindgren@@gmail.com}
+#' @seealso [inla.mesh.2d()], [inla.mesh.create()],
+#' [inla.mesh.1d()], [inla.mesh.basis()],
+#' [inla.spde2.matern()], [inla.spde2.generic()]
+#' @references Fuglstad, G.-A., Simpson, D., Lindgren, F., and Rue, H. (2016)
+#' Constructing Priors that Penalize the Complexity of Gaussian Random Fields.
+#' arXiv:1503.00256
+#'
+#' Simpson, D., Rue, H., Martins, T., Riebler, A., and Sørbye, S. (2015)
+#' Penalising model component complexity: A principled, practical approach to
+#' constructing priors. arXiv:1403.4630
+#'
+#' @export inla.spde2.pcmatern
+inla.spde2.pcmatern <- function(mesh,
+                              ...) {
+  UseMethod("inla.spde2.pcmatern", mesh)
+}
+
+#' @export
+#' @method inla.spde2.pcmatern inla_mesh_3d
+#' @rdname inla.spde2.pcmatern
+
+inla.spde2.pcmatern.inla_mesh_3d <- function(mesh, ...) {
+  inla.spde2.pcmatern3d(mesh, ...)
+}
+
+#' @export
+#' @rdname inla.spde2.pcmatern
+#' @method inla.spde2.pcmatern default
+
+inla.spde2.pcmatern.default <- function(mesh, ...) {
+  INLA::inla.spde2.pcmatern(mesh, ...)
+}
+
+#' @export
+#' @rdname inla.spde2.pcmatern
+inla.spde2.pcmatern3d <-
+  function(mesh,
+           alpha = 2,
+           param = NULL,
+           constr = FALSE,
+           extraconstr.int = NULL,
+           extraconstr = NULL,
+           fractional.method = c("parsimonious", "null"),
+           n.iid.group = 1,
+           prior.range = NULL,
+           prior.sigma = NULL)
+  {
+    ## Implementation of PC prior for standard deviation and range
+    ##    - Sets the parametrization to range and standard deviation
+    ##    - Sets prior according to hyperparameters for range   : prior.range
+    ##                                              and std.dev.: prior.sigma
+    ## Calls inla.spde2.matern to construct the object, then changes the prior
+    if (inherits(mesh, "inla_mesh_3d")) {
+      d <- 3
+    } else if (inherits(mesh, "inla.mesh")) {
+      d <- 2
+    } else if (inherits(mesh, "inla.mesh.1d")) {
+      d <- 1
+    } else {
+      stop(paste("Unknown mesh class '",
+                 paste(class(mesh), collapse=",", sep=""),
+                 "'.", sep=""))
+    }
+
+    if (missing(prior.range) || is.null(prior.range) ||
+        !is.vector(prior.range) || (length(prior.range) != 2)) {
+      stop("'prior.range' should be a length 2 vector 'c(range0,tailprob)' or a fixed range specified with 'c(range,NA)'.")
+    }
+    if (missing(prior.sigma) || is.null(prior.sigma) ||
+        !is.vector(prior.sigma) || (length(prior.sigma) != 2)) {
+      stop("'prior.sigma' should be a length 2 vector 'c(sigma0,tailprob)' or a fixed sigma specified with 'c(sigma,NA)'.")
+    }
+    if (prior.range[1] <= 0){
+      stop("'prior.range[1]' must be a number greater than 0 specifying a spatial range")
+    }
+    if (prior.sigma[1] <= 0){
+      stop("'prior.sigma[1]' must be a number greater than 0 specifying a standard deviation")
+    }
+    if (!is.na(prior.range[2]) &&
+        ((prior.range[2] <= 0) || (prior.range[2] >= 1))) {
+      stop("'prior.range[2]' must be a probaility strictly between 0 and 1 (or NA to specify a fixed range)")
+    }
+    if (!is.na(prior.sigma[2]) &&
+        ((prior.sigma[2] <= 0) || (prior.sigma[2] >= 1))) {
+      stop("'prior.sigma[2]' must be a probaility strictly between 0 and 1 (or NA to specify a fixed sigma)")
+    }
+
+    nu <- alpha-d/2
+    if (nu <= 0) {
+      stop(paste("Smoothness nu = alpha-dim/2 = ", nu,
+                 ", but must be > 0.", sep=""))
+    }
+
+    spde   <- inla.spde2.matern(mesh = mesh,
+                                param =
+                                  param2.matern(
+                                    mesh,
+                                    alpha = alpha,
+                                    prior_range = 1,
+                                    prior_sigma = 1,
+                                    ),
+                                constr = constr,
+                                extraconstr.int = extraconstr.int,
+                                extraconstr = extraconstr,
+                                fractional.method = fractional.method,
+                                n.iid.group = n.iid.group)
+
+    ## Calculate hyperparameters
+    is.fixed.range <- is.na(prior.range[2])
+    if (is.fixed.range) {
+      lam1 <- 0
+      initial.range <- log(prior.range[1])
+    } else {
+      lam1 <- -log(prior.range[2])*prior.range[1]^(d/2)
+      initial.range <- log(prior.range[1]) + 1
+    }
+
+    is.fixed.sigma <- is.na(prior.sigma[2])
+    if (is.fixed.sigma){
+      lam2 <- 0
+      initial.sigma <- log(prior.sigma[1])
+    } else{
+      lam2 <- -log(prior.sigma[2])/prior.sigma[1]
+      initial.sigma <- log(prior.sigma[1]) - 1
+    }
+
+    pcmatern.param = c(lam1, lam2, d)
+
+    ## Change prior information
+    spde$f$hyper.default <-
+      list(theta1=list(prior="pcmatern",
+                       param=pcmatern.param,
+                       initial=initial.range,
+                       fixed=is.fixed.range),
+           theta2=list(initial=initial.sigma,
+                       fixed=is.fixed.sigma))
+
+    ## Change the model descriptor
+    spde$model = "pcmatern"
+
+    invisible(spde)
+  }
+
+
+
+
+# Parameter construction ----
 
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION
@@ -618,8 +978,8 @@ construct_prior <- function(B_range, B_sigma,
       # B_range[, -1, drop = FALSE]^2 %*% variance on average sd_lrange^2
       # B_sigma[, -1, drop = FALSE]^2 %*% variance on average sd_lsigma^2
       # prec = 1 / variance
-      sd_lrange <- log(prior_range[[2]]) / qnorm(0.99)
-      sd_lsigma <- log(prior_sigma[[2]]) / qnorm(0.99)
+      sd_lrange <- log(prior_range[[2]]) / stats::qnorm(0.99)
+      sd_lsigma <- log(prior_sigma[[2]]) / stats::qnorm(0.99)
       prior_theta$prec <-
         1 / qr.solve(rbind(B_range[, -1, drop = FALSE]^2,
                            B_sigma[, -1, drop = FALSE]^2),
@@ -671,11 +1031,11 @@ construct_prior <- function(B_range, B_sigma,
 #' and `sigma` (the field standard deviation parameter) are constructed so that
 #' the prior median is given by `median`, and
 #' \deqn{P(median/factor < param < median*factor) = 0.98}
-#' which means that the std.dev. of `log(param)` is `log(factor)/qnorm(0.99)`.
+#' which means that the std.dev. of `log(param)` is `log(factor)/stats::qnorm(0.99)`.
 #'
 #' Remark: In the old `param2.matern.orig` function, the internal parameter
 #' scale used a default prior precision \eqn{0.1}. This corresponds to
-#' `factor=exp(qnorm((1+0.98)/2)/sqrt(0.1))`, that equals \eqn{1566.435}.
+#' `factor=exp(stats::qnorm((1+0.98)/2)/sqrt(0.1))`, that equals \eqn{1566.435}.
 #' This large value has lead to numerical and other problems for many models.
 #' @examples
 #' \dontrun{
@@ -820,6 +1180,7 @@ plot.inla_mesh_3d <- function(x,
                               t_sub =  NULL,
                               size = 5,
                               lwd = 2,
+                              fill_col = NULL,
                               add = FALSE, ...) {
   stopifnot(requireNamespace("rgl", quietly = TRUE))
   if (!add) {
@@ -849,8 +1210,16 @@ plot.inla_mesh_3d <- function(x,
   triv <- as.vector(t(triv))
   edgev <- as.vector(t(edgev))
   if (include[3]) {
-    rgl::triangles3d(x$loc[triv, , drop = FALSE],
-                     lwd = lwd, color = col[3], alpha = alpha[3], ...)
+    if (is.null(fill_col)) {
+      rgl::triangles3d(x$loc[triv, , drop = FALSE],
+                       lwd = lwd, color = col[3], alpha = alpha[3], ...)
+    } else if (length(fill_col) == nrow(x$loc)) {
+      rgl::triangles3d(x$loc[triv, , drop = FALSE],
+                       lwd = lwd, color = fill_col[triv],
+                       alpha = alpha[3], ...)
+    } else {
+      stop("Only per-vertex fill colours implemented.")
+    }
   }
   if (include[2]) {
     rgl::lines3d(x$loc[edgev, , drop = FALSE],
