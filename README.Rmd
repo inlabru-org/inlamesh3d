@@ -28,14 +28,14 @@ You can install the development version from [GitHub](https://github.com/) with:
 
 ```{r eval=FALSE}
 # install.packages("remotes")
-remotes::install_github("finnlindgren/inlamesh3d", build_vignettes = TRUE)
+remotes::install_github("inlabru-org/inlamesh3d", build_vignettes = TRUE)
 ```
 ## Example
 
 You must load `INLA` before loading `inlamesh3d` to get the correct overrides.
 
 ```{r example}
-library(INLA)
+suppressPackageStartupMessages(library(INLA))
 library(inlamesh3d)
 loc <- matrix(rnorm(12), 4, 3)
 tv <- geometry::delaunayn(loc)

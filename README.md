@@ -17,7 +17,7 @@ You can install the development version from
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("finnlindgren/inlamesh3d", build_vignettes = TRUE)
+remotes::install_github("inlabru-org/inlamesh3d", build_vignettes = TRUE)
 ```
 
 ## Example
@@ -26,19 +26,7 @@ You must load `INLA` before loading `inlamesh3d` to get the correct
 overrides.
 
 ``` r
-library(INLA)
-#> Loading required package: Matrix
-#> Loading required package: sp
-#> The legacy packages maptools, rgdal, and rgeos, underpinning the sp package,
-#> which was just loaded, will retire in October 2023.
-#> Please refer to R-spatial evolution reports for details, especially
-#> https://r-spatial.org/r/2023/05/15/evolution4.html.
-#> It may be desirable to make the sf package available;
-#> package maintainers should consider adding sf to Suggests:.
-#> The sp package is now running under evolution status 2
-#>      (status 2 uses the sf package in place of rgdal)
-#> This is INLA_99.99.9999 built 2023-06-23 15:51:37 UTC.
-#>  - See www.r-inla.org/contact-us for how to get help.
+suppressPackageStartupMessages(library(INLA))
 library(inlamesh3d)
 #> 
 #> Attaching package: 'inlamesh3d'
@@ -53,9 +41,9 @@ str(mesh)
 #> List of 4
 #>  $ manifold: chr "R3"
 #>  $ n       : int 4
-#>  $ loc     : num [1:4, 1:3] 0.3288 -0.3396 0.0141 2.716 0.3583 ...
+#>  $ loc     : num [1:4, 1:3] 1.2538 0.4494 0.2777 -1.2638 0.0667 ...
 #>  $ graph   :List of 1
-#>   ..$ tv: int [1, 1:4] 1 3 4 2
+#>   ..$ tv: int [1, 1:4] 3 2 1 4
 #>  - attr(*, "class")= chr "inla_mesh_3d"
 ```
 
