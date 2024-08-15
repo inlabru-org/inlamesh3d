@@ -251,6 +251,9 @@ fm_basis.inla_mesh_3d <- function(x, ...) {
 
 inla.mesh3d.bary <- function(mesh, loc, divide_along = 1, t_subset = NULL) {
   stopifnot(inherits(mesh, "inla_mesh_3d"))
+  if (nrow(loc) == 0) {
+    return(list(bary = matrix(0, 0, 4), vt = integer(0)))
+  }
   loc_1 <- rbind(t(loc), 1)
   bary <- matrix(-Inf, nrow(loc), 4)
   vt <- integer(nrow(loc))
