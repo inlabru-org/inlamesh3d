@@ -6,9 +6,9 @@
 #' @details DETAILS
 #' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#' if (interactive()) {
+#'   # EXAMPLE1
+#' }
 #' }
 #' @rdname inla.mesh3d
 #' @aliases inla_mesh_3d
@@ -38,9 +38,9 @@ inla.mesh3d <- function(loc, tv) {
 #' @details DETAILS
 #' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#' if (interactive()) {
+#'   # EXAMPLE1
+#' }
 #' }
 #' @rdname inla.mesh.fem
 #' @export
@@ -73,9 +73,9 @@ inla.mesh.fem.default <- function(mesh, ...) {
 #' @details DETAILS
 #' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#' if (interactive()) {
+#'   # EXAMPLE1
+#' }
 #' }
 #' @rdname row_cross_product
 #' @export
@@ -97,9 +97,9 @@ row_cross_product <- function(e1, e2) {
 #' @details DETAILS
 #' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#' if (interactive()) {
+#'   # EXAMPLE1
+#' }
 #' }
 #' @rdname row_volume_product
 #' @export
@@ -115,9 +115,9 @@ row_volume_product <- function(e1, e2, e3) {
 #' @details DETAILS
 #' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#' if (interactive()) {
+#'   # EXAMPLE1
+#' }
 #' }
 #' @rdname inla.mesh.fem
 #' @export
@@ -206,15 +206,15 @@ inla.mesh3d.volumes <- function(mesh, ...) {
 #' @details DETAILS
 #' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#' if (interactive()) {
+#'   # EXAMPLE1
+#' }
 #' }
 #' @rdname inla.spde.make.A
 #' @export
 
 inla.spde.make.A <- function(mesh,
-                              ...) {
+                             ...) {
   UseMethod("inla.spde.make.A", mesh)
 }
 
@@ -241,9 +241,9 @@ inla.spde.make.A.default <- function(mesh, ...) {
 #' @details DETAILS
 #' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#' if (interactive()) {
+#'   # EXAMPLE1
+#' }
 #' }
 #' @rdname inla.mesh3d.bary
 #' @export
@@ -262,9 +262,11 @@ inla.mesh3d.bary <- function(mesh, loc, divide_along = 1, t_subset = NULL) {
     t_left <- t_subset[t_order[seq_len(ceiling(length(t_subset) / 2))]]
     max_left <- max(mesh$loc[as.vector(mesh$graph$tv[t_left, ]), divide_along])
     loc_left <- which(loc[, divide_along] <= max_left)
-    message(paste0("Splitting ", divide_along,
-                   " into L: #T = ", length(t_left),
-                   " #loc = ", length(loc_left)))
+    message(paste0(
+      "Splitting ", divide_along,
+      " into L: #T = ", length(t_left),
+      " #loc = ", length(loc_left)
+    ))
     bary_left <- inla.mesh3d.bary(
       mesh,
       loc[loc_left, , drop = FALSE],
@@ -273,7 +275,7 @@ inla.mesh3d.bary <- function(mesh, loc, divide_along = 1, t_subset = NULL) {
     )
 
     idx <- which(apply(bary_left$bary, 1, min) >
-                   apply(bary[loc_left, , drop = FALSE], 1, min))
+      apply(bary[loc_left, , drop = FALSE], 1, min))
     if (length(idx) > 0) {
       bary[loc_left[idx], ] <- bary_left$bary[idx, , drop = FALSE]
       vt[loc_left[idx]] <- bary_left$vt[idx]
@@ -283,9 +285,11 @@ inla.mesh3d.bary <- function(mesh, loc, divide_along = 1, t_subset = NULL) {
     if (length(t_right) > 0) {
       min_right <- min(mesh$loc[as.vector(mesh$graph$tv[t_right, ]), divide_along])
       loc_right <- which(loc[, divide_along] >= min_right)
-      message(paste0("Splitting ", divide_along,
-                     " into R: #T = ", length(t_right),
-                     " #loc = ", length(loc_right)))
+      message(paste0(
+        "Splitting ", divide_along,
+        " into R: #T = ", length(t_right),
+        " #loc = ", length(loc_right)
+      ))
       bary_right <- inla.mesh3d.bary(
         mesh,
         loc[loc_right, , drop = FALSE],
@@ -295,32 +299,35 @@ inla.mesh3d.bary <- function(mesh, loc, divide_along = 1, t_subset = NULL) {
 
 
       idx <- which(apply(bary_right$bary, 1, min) >
-                     apply(bary[loc_right, , drop = FALSE], 1, min))
+        apply(bary[loc_right, , drop = FALSE], 1, min))
       if (length(idx) > 0) {
         bary[loc_right[idx], ] <- bary_right$bary[idx, , drop = FALSE]
         vt[loc_right[idx]] <- bary_right$vt[idx]
       }
     }
-
   } else {
-    message(paste0("Handling: #T = ", length(t_subset),
-                   ", #loc = ", nrow(loc),
-                   ", #loc/#T = ", nrow(loc) / length(t_subset)))
+    message(paste0(
+      "Handling: #T = ", length(t_subset),
+      ", #loc = ", nrow(loc),
+      ", #loc/#T = ", nrow(loc) / length(t_subset)
+    ))
     time0 <- proc.time()
     for (tt in t_subset) {
       loc_t <- mesh$loc[mesh$graph$tv[tt, ], , drop = FALSE]
       # Barycentric coordinates fulfil
       # 1) rbind(t(loc), 1) = rbind(t(loc_t), 1) * w
       # 2) w >= 0
-      try({
-        w <- solve(rbind(t(loc_t), 1), loc_1)
-        idx <- which(apply(w, 2, min) > apply(bary, 1, min))
-        if (length(idx) > 0) {
-          bary[idx, ] <- t(w[, idx, drop = FALSE])
-          vt[idx] <- tt
-        }
-      },
-      silent = TRUE)
+      try(
+        {
+          w <- solve(rbind(t(loc_t), 1), loc_1)
+          idx <- which(apply(w, 2, min) > apply(bary, 1, min))
+          if (length(idx) > 0) {
+            bary[idx, ] <- t(w[, idx, drop = FALSE])
+            vt[idx] <- tt
+          }
+        },
+        silent = TRUE
+      )
     }
     time1 <- proc.time()
     time <- time1 - time0
@@ -361,9 +368,9 @@ inla.mesh3d.bary.old <- function(mesh, loc) {
 #' @details DETAILS
 #' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#' if (interactive()) {
+#'   # EXAMPLE1
+#' }
 #' }
 #' @seealso
 #'  \code{\link[Matrix]{sparseMatrix}}
@@ -404,9 +411,9 @@ inla.mesh3d.make.A <- function(mesh, loc, ...) {
 #' @details DETAILS
 #' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#' if (interactive()) {
+#'   # EXAMPLE1
+#' }
 #' }
 #' @rdname inla.spde2.matern
 #' @export
@@ -444,9 +451,9 @@ inla.spde2.matern.default <- function(mesh, ...) {
 #' @details DETAILS
 #' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#' if (interactive()) {
+#'   # EXAMPLE1
+#' }
 #' }
 #' @seealso
 #'  \code{\link{param2.matern3d}},\code{\link{param2.matern_calc}}
@@ -479,9 +486,9 @@ inla.spde2.matern3d <-
       deprecated <- deprecated[deprecated %in% names(list(...))]
       if (length(deprecated) > 0) {
         warning(paste("'param' specified;  ",
-                      "Ignoring deprecated parameter(s) ",
-                      paste(deprecated, collapse = ", "), ".",
-                      sep = ""
+          "Ignoring deprecated parameter(s) ",
+          paste(deprecated, collapse = ", "), ".",
+          sep = ""
         ))
       }
     }
@@ -516,8 +523,8 @@ inla.spde2.matern3d <-
         b <- c(1, alpha, alpha * (alpha - 1) / 2)
       } else {
         stop(paste("Unknown fractional.method '", fractional.method,
-                   "'.",
-                   sep = ""
+          "'.",
+          sep = ""
         ))
       }
       B.phi0 <- param$B.tau + (alpha - 2) * param$B.kappa
@@ -537,8 +544,8 @@ inla.spde2.matern3d <-
         b <- c(1, alpha)
       } else {
         stop(paste("Unknown fractional.method '", fractional.method,
-                   "'.",
-                   sep = ""
+          "'.",
+          sep = ""
         ))
       }
       B.phi0 <- param$B.tau + (alpha - 1) * param$B.kappa
@@ -548,8 +555,8 @@ inla.spde2.matern3d <-
       M2 <- fem$g1 * b[2]
     } else {
       stop(paste("Unsupported alpha value (", alpha,
-                 "). Supported values are 0 < alpha <= 2",
-                 sep = ""
+        "). Supported values are 0 < alpha <= 2",
+        sep = ""
       ))
     }
 
@@ -613,10 +620,10 @@ inla.spde2.matern3d <-
             rbind(
               A.constr,
               as.matrix(extraconstr.int$A %*%
-                          kronecker(
-                            Matrix::Diagonal(n.iid.group),
-                            fem$c0
-                          ))
+                kronecker(
+                  Matrix::Diagonal(n.iid.group),
+                  fem$c0
+                ))
             )
         }
         e.constr <- rbind(e.constr, as.matrix(extraconstr.int$e))
@@ -761,7 +768,7 @@ inla.spde2.matern3d <-
 #'
 #' @export inla.spde2.pcmatern
 inla.spde2.pcmatern <- function(mesh,
-                              ...) {
+                                ...) {
   UseMethod("inla.spde2.pcmatern", mesh)
 }
 
@@ -793,8 +800,7 @@ inla.spde2.pcmatern3d <-
            fractional.method = c("parsimonious", "null"),
            n.iid.group = 1,
            prior.range = NULL,
-           prior.sigma = NULL)
-  {
+           prior.sigma = NULL) {
     ## Implementation of PC prior for standard deviation and range
     ##    - Sets the parametrization to range and standard deviation
     ##    - Sets prior according to hyperparameters for range   : prior.range
@@ -808,52 +814,58 @@ inla.spde2.pcmatern3d <-
       d <- 1
     } else {
       stop(paste("Unknown mesh class '",
-                 paste(class(mesh), collapse=",", sep=""),
-                 "'.", sep=""))
+        paste(class(mesh), collapse = ",", sep = ""),
+        "'.",
+        sep = ""
+      ))
     }
 
     if (missing(prior.range) || is.null(prior.range) ||
-        !is.vector(prior.range) || (length(prior.range) != 2)) {
+      !is.vector(prior.range) || (length(prior.range) != 2)) {
       stop("'prior.range' should be a length 2 vector 'c(range0,tailprob)' or a fixed range specified with 'c(range,NA)'.")
     }
     if (missing(prior.sigma) || is.null(prior.sigma) ||
-        !is.vector(prior.sigma) || (length(prior.sigma) != 2)) {
+      !is.vector(prior.sigma) || (length(prior.sigma) != 2)) {
       stop("'prior.sigma' should be a length 2 vector 'c(sigma0,tailprob)' or a fixed sigma specified with 'c(sigma,NA)'.")
     }
-    if (prior.range[1] <= 0){
+    if (prior.range[1] <= 0) {
       stop("'prior.range[1]' must be a number greater than 0 specifying a spatial range")
     }
-    if (prior.sigma[1] <= 0){
+    if (prior.sigma[1] <= 0) {
       stop("'prior.sigma[1]' must be a number greater than 0 specifying a standard deviation")
     }
     if (!is.na(prior.range[2]) &&
-        ((prior.range[2] <= 0) || (prior.range[2] >= 1))) {
+      ((prior.range[2] <= 0) || (prior.range[2] >= 1))) {
       stop("'prior.range[2]' must be a probaility strictly between 0 and 1 (or NA to specify a fixed range)")
     }
     if (!is.na(prior.sigma[2]) &&
-        ((prior.sigma[2] <= 0) || (prior.sigma[2] >= 1))) {
+      ((prior.sigma[2] <= 0) || (prior.sigma[2] >= 1))) {
       stop("'prior.sigma[2]' must be a probaility strictly between 0 and 1 (or NA to specify a fixed sigma)")
     }
 
-    nu <- alpha-d/2
+    nu <- alpha - d / 2
     if (nu <= 0) {
       stop(paste("Smoothness nu = alpha-dim/2 = ", nu,
-                 ", but must be > 0.", sep=""))
+        ", but must be > 0.",
+        sep = ""
+      ))
     }
 
-    spde   <- inla.spde2.matern(mesh = mesh,
-                                param =
-                                  param2.matern(
-                                    mesh,
-                                    alpha = alpha,
-                                    prior_range = 1,
-                                    prior_sigma = 1,
-                                    ),
-                                constr = constr,
-                                extraconstr.int = extraconstr.int,
-                                extraconstr = extraconstr,
-                                fractional.method = fractional.method,
-                                n.iid.group = n.iid.group)
+    spde <- inla.spde2.matern(
+      mesh = mesh,
+      param =
+        param2.matern(
+          mesh,
+          alpha = alpha,
+          prior_range = 1,
+          prior_sigma = 1,
+        ),
+      constr = constr,
+      extraconstr.int = extraconstr.int,
+      extraconstr = extraconstr,
+      fractional.method = fractional.method,
+      n.iid.group = n.iid.group
+    )
 
     ## Calculate hyperparameters
     is.fixed.range <- is.na(prior.range[2])
@@ -861,32 +873,38 @@ inla.spde2.pcmatern3d <-
       lam1 <- 0
       initial.range <- log(prior.range[1])
     } else {
-      lam1 <- -log(prior.range[2])*prior.range[1]^(d/2)
+      lam1 <- -log(prior.range[2]) * prior.range[1]^(d / 2)
       initial.range <- log(prior.range[1]) + 1
     }
 
     is.fixed.sigma <- is.na(prior.sigma[2])
-    if (is.fixed.sigma){
+    if (is.fixed.sigma) {
       lam2 <- 0
       initial.sigma <- log(prior.sigma[1])
-    } else{
-      lam2 <- -log(prior.sigma[2])/prior.sigma[1]
+    } else {
+      lam2 <- -log(prior.sigma[2]) / prior.sigma[1]
       initial.sigma <- log(prior.sigma[1]) - 1
     }
 
-    pcmatern.param = c(lam1, lam2, d)
+    pcmatern.param <- c(lam1, lam2, d)
 
     ## Change prior information
     spde$f$hyper.default <-
-      list(theta1=list(prior="pcmatern",
-                       param=pcmatern.param,
-                       initial=initial.range,
-                       fixed=is.fixed.range),
-           theta2=list(initial=initial.sigma,
-                       fixed=is.fixed.sigma))
+      list(
+        theta1 = list(
+          prior = "pcmatern",
+          param = pcmatern.param,
+          initial = initial.range,
+          fixed = is.fixed.range
+        ),
+        theta2 = list(
+          initial = initial.sigma,
+          fixed = is.fixed.sigma
+        )
+      )
 
     ## Change the model descriptor
-    spde$model = "pcmatern"
+    spde$model <- "pcmatern"
 
     invisible(spde)
   }
@@ -904,9 +922,9 @@ inla.spde2.pcmatern3d <-
 #' @details DETAILS
 #' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#' if (interactive()) {
+#'   # EXAMPLE1
+#' }
 #' }
 #' @rdname param2.matern
 #' @export
@@ -938,15 +956,19 @@ param2.matern.inla.mesh.1d <- function(mesh, ...) {
 }
 
 B_range_sigma_to_tau_kappa <- function(B_range, B_sigma, d, nu) {
-  alpha <- nu + d/2
+  alpha <- nu + d / 2
   log_kappa0 <- log(8 * nu) / 2 - B_range[, 1]
   log_tau0 <- (lgamma(nu) - lgamma(alpha) - d / 2 * log(4 * pi)) / 2 -
     B_sigma[, 1] - nu * log_kappa0
-  B_tau <- cbind(log_tau0,
-                 -B_sigma[, -1, drop = FALSE] +
-                   nu * B_range[, -1, drop = FALSE])
-  B_kappa <- cbind(log_kappa0,
-                   -B_range[, -1, drop = FALSE])
+  B_tau <- cbind(
+    log_tau0,
+    -B_sigma[, -1, drop = FALSE] +
+      nu * B_range[, -1, drop = FALSE]
+  )
+  B_kappa <- cbind(
+    log_kappa0,
+    -B_range[, -1, drop = FALSE]
+  )
   list(B_tau = B_tau, B_kappa = B_kappa)
 }
 
@@ -971,20 +993,32 @@ construct_prior <- function(B_range, B_sigma,
       # B_range[, -1, drop = FALSE] %*% mean on average mean_lrange - B_range[, 1]
       # B_sigma[, -1, drop = FALSE] %*% mean on average mean_lsigma - B_sigma[, 1]
       prior_theta$mean <-
-        qr.solve(rbind(B_range[, -1, drop = FALSE],
-                       B_sigma[, -1, drop = FALSE]),
-                 c(log(prior_range[[1]]) - B_range[, 1],
-                   log(prior_sigma[[1]]) - B_sigma[, 1]))
+        qr.solve(
+          rbind(
+            B_range[, -1, drop = FALSE],
+            B_sigma[, -1, drop = FALSE]
+          ),
+          c(
+            log(prior_range[[1]]) - B_range[, 1],
+            log(prior_sigma[[1]]) - B_sigma[, 1]
+          )
+        )
       # B_range[, -1, drop = FALSE]^2 %*% variance on average sd_lrange^2
       # B_sigma[, -1, drop = FALSE]^2 %*% variance on average sd_lsigma^2
       # prec = 1 / variance
       sd_lrange <- log(prior_range[[2]]) / stats::qnorm(0.99)
       sd_lsigma <- log(prior_sigma[[2]]) / stats::qnorm(0.99)
       prior_theta$prec <-
-        1 / qr.solve(rbind(B_range[, -1, drop = FALSE]^2,
-                           B_sigma[, -1, drop = FALSE]^2),
-                     c(sd_lrange^2 - rep(0, nrow(B_range)),
-                       sd_lsigma^2 - rep(0, nrow(B_sigma))))
+        1 / qr.solve(
+          rbind(
+            B_range[, -1, drop = FALSE]^2,
+            B_sigma[, -1, drop = FALSE]^2
+          ),
+          c(
+            sd_lrange^2 - rep(0, nrow(B_range)),
+            sd_lsigma^2 - rep(0, nrow(B_sigma))
+          )
+        )
     } else {
       prior_theta$mean <- rep(0, n_theta) ## Empty vector
       prior_theta$prec <- matrix(0, n_theta, n_theta) ## Empty matrix
@@ -997,12 +1031,14 @@ construct_prior <- function(B_range, B_sigma,
     prior_theta$prec <-
       diag(as.vector(prior_theta$prec), n_theta, n_theta)
   } else if ((nrow(prior_theta$prec) != n_theta) ||
-             (ncol(prior_theta$prec) != n_theta)) {
-    stop(paste("Size of prior_theta$prec is (",
-               paste(dim(prior_theta$prec), collapse = ",", sep = ""),
-               ") but should be (",
-               paste(c(n_theta, n_theta), collapse = ",", sep = ""),
-               ")."))
+    (ncol(prior_theta$prec) != n_theta)) {
+    stop(paste(
+      "Size of prior_theta$prec is (",
+      paste(dim(prior_theta$prec), collapse = ",", sep = ""),
+      ") but should be (",
+      paste(c(n_theta, n_theta), collapse = ",", sep = ""),
+      ")."
+    ))
   }
 
   prior_theta
@@ -1039,9 +1075,9 @@ construct_prior <- function(B_range, B_sigma,
 #' This large value has lead to numerical and other problems for many models.
 #' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#' if (interactive()) {
+#'   # EXAMPLE1
+#' }
 #' }
 #' @rdname param2.matern
 #' @export
@@ -1057,7 +1093,6 @@ param2.matern_calc <-
            B_sigma = matrix(c(0, 0, 1), 1, 3),
            prior_theta = NULL,
            ...) {
-
     if (is.null(dim)) {
       stop("'dim' must not be NULL.")
     }
@@ -1093,8 +1128,10 @@ param2.matern_calc <-
     stopifnot(nu > 0)
 
     if (is.null(dof)) {
-      dof <- max(nrow(B_range), nrow(B_sigma),
-                 length(prior_range[[1]]), length(prior_sigma[[1]]))
+      dof <- max(
+        nrow(B_range), nrow(B_sigma),
+        length(prior_range[[1]]), length(prior_sigma[[1]])
+      )
     }
     n_theta <- ncol(B_range) - 1L
 
@@ -1102,10 +1139,12 @@ param2.matern_calc <-
     B_sigma <- INLA:::inla.spde.homogenise_B_matrix(B_sigma, dof, n_theta)
     B_range[, 1] <- log(prior_range[[1]])
     B_sigma[, 1] <- log(prior_sigma[[1]])
-    B_tau_kappa <- B_range_sigma_to_tau_kappa(B_range = B_range,
-                                              B_sigma = B_sigma,
-                                              d = d,
-                                              nu = nu)
+    B_tau_kappa <- B_range_sigma_to_tau_kappa(
+      B_range = B_range,
+      B_sigma = B_sigma,
+      d = d,
+      nu = nu
+    )
     B_tau <- B_tau_kappa$B_tau
     B_kappa <- B_tau_kappa$B_kappa
 
@@ -1134,17 +1173,20 @@ param2.matern_calc <-
 
     ## Construct prior.
     prior_theta <- construct_prior(B_range, B_sigma,
-                                   prior_range, prior_sigma,
-                                   d = d, nu = nu,
-                                   prior_theta)
+      prior_range, prior_sigma,
+      d = d, nu = nu,
+      prior_theta
+    )
 
     param <-
-      list(alpha = alpha,
-           is.stationary = is.stationary,
-           B_range = B_range, B_sigma = B_sigma,
-           B.tau = B_tau, B.kappa = B_kappa, BLC = BLC,
-           theta.prior.mean = prior_theta$mean,
-           theta.prior.prec = prior_theta$prec)
+      list(
+        alpha = alpha,
+        is.stationary = is.stationary,
+        B_range = B_range, B_sigma = B_sigma,
+        B.tau = B_tau, B.kappa = B_kappa, BLC = BLC,
+        theta.prior.mean = prior_theta$mean,
+        theta.prior.prec = prior_theta$prec
+      )
     return(param)
   }
 
@@ -1166,9 +1208,9 @@ param2.matern_calc <-
 #' @param ... Further parameters passed through to the rgl plotting functions
 #' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#' if (interactive()) {
+#'   # EXAMPLE1
+#' }
 #' }
 #' @export
 #' @rdname plot.inla_mesh_3d
@@ -1177,7 +1219,7 @@ plot.inla_mesh_3d <- function(x,
                               include = c(FALSE, TRUE, TRUE),
                               alpha = c(0.9, 0.3, 0.1),
                               col = c("black", "blue", "red"),
-                              t_sub =  NULL,
+                              t_sub = NULL,
                               size = 5,
                               lwd = 2,
                               fill_col = NULL,
@@ -1186,8 +1228,7 @@ plot.inla_mesh_3d <- function(x,
   if (!add) {
     dev <- rgl::open3d()
     rgl::view3d(0, 0, fov = 0)
-  }
-  else {
+  } else {
     dev <- NULL
   }
   if (is.null(t_sub)) {
@@ -1196,15 +1237,19 @@ plot.inla_mesh_3d <- function(x,
     tetrav <- x$graph$tv[t_sub, , drop = FALSE]
   }
   # Triangles
-  triv <- rbind(tetrav[, -1, drop = FALSE],
-                tetrav[, -2, drop = FALSE],
-                tetrav[, -3, drop = FALSE],
-                tetrav[, -4, drop = FALSE])
+  triv <- rbind(
+    tetrav[, -1, drop = FALSE],
+    tetrav[, -2, drop = FALSE],
+    tetrav[, -3, drop = FALSE],
+    tetrav[, -4, drop = FALSE]
+  )
   triv <- unique(t(apply(triv, 1, sort)))
   # Edges
-  edgev <- rbind(triv[, -1, drop = FALSE],
-                 triv[, -2, drop = FALSE],
-                 triv[, -3, drop = FALSE])
+  edgev <- rbind(
+    triv[, -1, drop = FALSE],
+    triv[, -2, drop = FALSE],
+    triv[, -3, drop = FALSE]
+  )
   edgev <- unique(t(apply(edgev, 1, sort)))
   # Plot
   triv <- as.vector(t(triv))
@@ -1212,24 +1257,27 @@ plot.inla_mesh_3d <- function(x,
   if (include[3]) {
     if (is.null(fill_col)) {
       rgl::triangles3d(x$loc[triv, , drop = FALSE],
-                       lwd = lwd, color = col[3], alpha = alpha[3], ...)
+        lwd = lwd, color = col[3], alpha = alpha[3], ...
+      )
     } else if (length(fill_col) == nrow(x$loc)) {
       rgl::triangles3d(x$loc[triv, , drop = FALSE],
-                       lwd = lwd, color = fill_col[triv],
-                       alpha = alpha[3], ...)
+        lwd = lwd, color = fill_col[triv],
+        alpha = alpha[3], ...
+      )
     } else {
       stop("Only per-vertex fill colours implemented.")
     }
   }
   if (include[2]) {
     rgl::lines3d(x$loc[edgev, , drop = FALSE],
-                 lwd = lwd, color = col[2], alpha = alpha[2], ...)
+      lwd = lwd, color = col[2], alpha = alpha[2], ...
+    )
   }
   if (include[1]) {
     idx <- unique(as.vector(tetrav))
     rgl::points3d(x$loc[idx, , drop = FALSE],
-                  size = size, lwd = lwd, color = col[1], alpha = alpha[1],
-                  ...)
+      size = size, lwd = lwd, color = col[1], alpha = alpha[1],
+      ...
+    )
   }
 }
-

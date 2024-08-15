@@ -87,13 +87,13 @@ This large value has lead to numerical and other problems for many models.
 }
 \examples{
 \dontrun{
-if(interactive()){
- #EXAMPLE1
- }
+if (interactive()) {
+  # EXAMPLE1
+}
 }
 \dontrun{
-if(interactive()){
- #EXAMPLE1
- }
+if (interactive()) {
+  # EXAMPLE1
+}
 }
 }
