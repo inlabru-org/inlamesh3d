@@ -1,7 +1,9 @@
-pandoc: 2.19.2
-pkgdown: 2.0.7
+pandoc: 3.1.11
+pkgdown: 2.1.0
 pkgdown_sha: ~
 articles:
-  spde3d: spde3d.html
-last_built: 2023-06-25T16:55Z
-
+  articles/spde3d: spde3d.html
+last_built: 2024-08-15T16:41Z
+urls:
+  reference: https://inlabru-org.github.io/inlamesh3d/reference
+  article: https://inlabru-org.github.io/inlamesh3d/articles

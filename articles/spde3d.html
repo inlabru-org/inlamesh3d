@@ -4,76 +4,63 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>SPDE models on 3D meshes • inlamesh3d</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
-<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="SPDE models on 3D meshes">
-<meta property="og:description" content="inlamesh3d">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="SPDE models on 3D meshes">
 </head>
-<body data-spy="scroll" data-target="#toc">
-    
+<body>
+    <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
-    <div class="container template-article">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">inlamesh3d</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9001</span>
-      </span>
-    </div>
 
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-<li>
-  <a href="../reference/index.html">Reference</a>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="../articles/spde3d.html">SPDE models on 3D meshes</a>
-    </li>
+    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+
+    <a class="navbar-brand me-2" href="../index.html">inlamesh3d</a>
+
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9001</small>
+
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar" class="collapse navbar-collapse ms-3">
+      <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="active nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="../articles/spde3d.html">SPDE models on 3D meshes</a></li>
   </ul>
 </li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
+</form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/inlabru-org/inlamesh3d/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+      </ul>
 </div>
-<!--/.nav-collapse -->
+
+
   </div>
-<!--/.container -->
-</div>
-<!--/.navbar -->
+</nav><div class="container template-article">
 
-      
 
-      </header><div class="row">
-  <div class="col-md-9 contents">
-    <div class="page-header toc-ignore">
-      <h1 data-toc-skip>SPDE models on 3D meshes</h1>
+
+
+<div class="row">
+  <main id="main" class="col-md-9"><div class="page-header">
+
+      <h1>SPDE models on 3D meshes</h1>
             
       
-      
-      <div class="hidden name"><code>spde3d.Rmd</code></div>
-
+      <small class="dont-index">Source: <a href="https://github.com/inlabru-org/inlamesh3d/blob/devel/vignettes/articles/spde3d.Rmd" class="external-link"><code>vignettes/articles/spde3d.Rmd</code></a></small>
+      <div class="d-none name"><code>spde3d.Rmd</code></div>
     </div>
 
     
@@ -86,17 +73,11 @@ methods provided by <code>inlamesh3d</code> take precedence:</p>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">INLA</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required package: Matrix</span></span>
 <span><span class="co">#&gt; Loading required package: sp</span></span>
-<span><span class="co">#&gt; The legacy packages maptools, rgdal, and rgeos, underpinning the sp package,</span></span>
-<span><span class="co">#&gt; which was just loaded, will retire in October 2023.</span></span>
-<span><span class="co">#&gt; Please refer to R-spatial evolution reports for details, especially</span></span>
-<span><span class="co">#&gt; https://r-spatial.org/r/2023/05/15/evolution4.html.</span></span>
-<span><span class="co">#&gt; It may be desirable to make the sf package available;</span></span>
-<span><span class="co">#&gt; package maintainers should consider adding sf to Suggests:.</span></span>
-<span><span class="co">#&gt; The sp package is now running under evolution status 2</span></span>
-<span><span class="co">#&gt;      (status 2 uses the sf package in place of rgdal)</span></span>
-<span><span class="co">#&gt; This is INLA_23.06.25 built 2023-06-25 06:51:12 UTC.</span></span>
+<span><span class="co">#&gt; This is INLA_24.06.27 built 2024-06-27 02:36:04 UTC.</span></span>
 <span><span class="co">#&gt;  - See www.r-inla.org/contact-us for how to get help.</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">inlamesh3d</span><span class="op">)</span></span>
+<span><span class="co">#&gt;  - List available models/likelihoods/etc with inla.list.models()</span></span>
+<span><span class="co">#&gt;  - Use inla.doc(&lt;NAME&gt;) to access documentation</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://inlabru-org.github.io/inlamesh3d/">inlamesh3d</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Attaching package: 'inlamesh3d'</span></span>
 <span><span class="co">#&gt; The following objects are masked from 'package:INLA':</span></span>
@@ -119,7 +100,8 @@ as for the traditional 2D triangle meshes:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fem</span> <span class="op">&lt;-</span> <span class="fu">inlamesh3d</span><span class="fu">::</span><span class="fu"><a href="../reference/inla.mesh.fem.html">inla.mesh.fem</a></span><span class="op">(</span><span class="va">mesh</span><span class="op">)</span></span></code></pre></div>
 <p>We can extract the matrices to construct a precision matrix manually,
-for <span class="math inline">\((1-\nabla\cdot\nabla)u(s)=\dot{W}(s)\)</span>:</p>
+for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>∇</mi><mo>⋅</mo><mi>∇</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>u</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mover><mi>W</mi><mo accent="true">̇</mo></mover><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">(1-\nabla\cdot\nabla)u(s)=\dot{W}(s)</annotation></semantics></math>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Q</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">fem</span>, <span class="va">c0</span> <span class="op">+</span> <span class="fl">2</span> <span class="op">*</span> <span class="va">g1</span> <span class="op">+</span> <span class="va">g2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/solve-methods.html" class="external-link">solve</a></span><span class="op">(</span><span class="va">Q</span><span class="op">)</span></span>
@@ -146,13 +128,16 @@ new version of <code>inla.spde2.matern</code>:</p>
 different to the old <code>param2.matern.orig</code> parameterisation,
 and is more similar to the one used by <code>inla.spde2.pcmatern</code>,
 in that the user-visible aspects are range and standard deviation
-instead of <span class="math inline">\(\tau\)</span> and <span class="math inline">\(\kappa\)</span>.</p>
+instead of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>τ</mi><annotation encoding="application/x-tex">\tau</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>κ</mi><annotation encoding="application/x-tex">\kappa</annotation></semantics></math>.</p>
 <p>Mapping data locations works the same as before. Here we verify that
 mapping the mesh vertices themselves produces an identity matrix:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">A</span> <span class="op">&lt;-</span> <span class="fu">inlamesh3d</span><span class="fu">::</span><span class="fu"><a href="../reference/inla.spde.make.A.html">inla.spde.make.A</a></span><span class="op">(</span><span class="va">mesh</span>, <span class="va">mesh</span><span class="op">$</span><span class="va">loc</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Handling: #T = 1, #loc = 4, #loc/#T = 4</span></span>
-<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 1</span></span>
+<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 3</span></span>
 <span><span class="va">A</span></span>
 <span><span class="co">#&gt; 4 x 4 sparse Matrix of class "dgCMatrix"</span></span>
 <span><span class="co">#&gt;             </span></span>
@@ -184,44 +169,44 @@ specify the internal parameter vector:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Q</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/INLA/man/inla.spde.precision.html" class="external-link">inla.spde2.precision</a></span><span class="op">(</span><span class="va">spde</span>, theta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.5</span>, <span class="fl">2</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">range0</span>, <span class="va">sigma0</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">A0</span> <span class="op">&lt;-</span> <span class="fu">inlamesh3d</span><span class="fu">::</span><span class="fu"><a href="../reference/inla.spde.make.A.html">inla.spde.make.A</a></span><span class="op">(</span><span class="va">mesh</span>, <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Splitting 1 into L: #T = 3216 #loc = 1</span></span>
-<span><span class="co">#&gt; Splitting 2 into L: #T = 1608 #loc = 1</span></span>
-<span><span class="co">#&gt; Splitting 3 into L: #T = 804 #loc = 1</span></span>
-<span><span class="co">#&gt; Handling: #T = 804, #loc = 1, #loc/#T = 0.00124378109452736</span></span>
-<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.0672</span></span>
-<span><span class="co">#&gt; Splitting 3 into R: #T = 804 #loc = 1</span></span>
-<span><span class="co">#&gt; Handling: #T = 804, #loc = 1, #loc/#T = 0.00124378109452736</span></span>
-<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.0672</span></span>
-<span><span class="co">#&gt; Splitting 2 into R: #T = 1608 #loc = 1</span></span>
-<span><span class="co">#&gt; Splitting 3 into L: #T = 804 #loc = 1</span></span>
-<span><span class="co">#&gt; Handling: #T = 804, #loc = 1, #loc/#T = 0.00124378109452736</span></span>
-<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.0697</span></span>
-<span><span class="co">#&gt; Splitting 3 into R: #T = 804 #loc = 1</span></span>
-<span><span class="co">#&gt; Handling: #T = 804, #loc = 1, #loc/#T = 0.00124378109452736</span></span>
-<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.0721</span></span>
-<span><span class="co">#&gt; Splitting 1 into R: #T = 3216 #loc = 1</span></span>
-<span><span class="co">#&gt; Splitting 2 into L: #T = 1608 #loc = 1</span></span>
-<span><span class="co">#&gt; Splitting 3 into L: #T = 804 #loc = 1</span></span>
-<span><span class="co">#&gt; Handling: #T = 804, #loc = 1, #loc/#T = 0.00124378109452736</span></span>
-<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.0672</span></span>
-<span><span class="co">#&gt; Splitting 3 into R: #T = 804 #loc = 1</span></span>
-<span><span class="co">#&gt; Handling: #T = 804, #loc = 1, #loc/#T = 0.00124378109452736</span></span>
-<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.0684</span></span>
-<span><span class="co">#&gt; Splitting 2 into R: #T = 1608 #loc = 1</span></span>
-<span><span class="co">#&gt; Splitting 3 into L: #T = 804 #loc = 1</span></span>
-<span><span class="co">#&gt; Handling: #T = 804, #loc = 1, #loc/#T = 0.00124378109452736</span></span>
-<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.0709</span></span>
-<span><span class="co">#&gt; Splitting 3 into R: #T = 804 #loc = 1</span></span>
-<span><span class="co">#&gt; Handling: #T = 804, #loc = 1, #loc/#T = 0.00124378109452736</span></span>
-<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.0659</span></span>
-<span><span class="va">D0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">mesh</span><span class="op">$</span><span class="va">loc</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">^</span><span class="fl">0.5</span></span>
+<span><span class="co">#&gt; Splitting 1 into L: #T = 3196 #loc = 1</span></span>
+<span><span class="co">#&gt; Splitting 2 into L: #T = 1598 #loc = 1</span></span>
+<span><span class="co">#&gt; Splitting 3 into L: #T = 799 #loc = 1</span></span>
+<span><span class="co">#&gt; Handling: #T = 799, #loc = 1, #loc/#T = 0.00125156445556946</span></span>
+<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.0626</span></span>
+<span><span class="co">#&gt; Splitting 3 into R: #T = 799 #loc = 1</span></span>
+<span><span class="co">#&gt; Handling: #T = 799, #loc = 1, #loc/#T = 0.00125156445556946</span></span>
+<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.0688</span></span>
+<span><span class="co">#&gt; Splitting 2 into R: #T = 1598 #loc = 1</span></span>
+<span><span class="co">#&gt; Splitting 3 into L: #T = 799 #loc = 1</span></span>
+<span><span class="co">#&gt; Handling: #T = 799, #loc = 1, #loc/#T = 0.00125156445556946</span></span>
+<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.0626</span></span>
+<span><span class="co">#&gt; Splitting 3 into R: #T = 799 #loc = 1</span></span>
+<span><span class="co">#&gt; Handling: #T = 799, #loc = 1, #loc/#T = 0.00125156445556946</span></span>
+<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.0626</span></span>
+<span><span class="co">#&gt; Splitting 1 into R: #T = 3196 #loc = 1</span></span>
+<span><span class="co">#&gt; Splitting 2 into L: #T = 1598 #loc = 1</span></span>
+<span><span class="co">#&gt; Splitting 3 into L: #T = 799 #loc = 1</span></span>
+<span><span class="co">#&gt; Handling: #T = 799, #loc = 1, #loc/#T = 0.00125156445556946</span></span>
+<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.0663</span></span>
+<span><span class="co">#&gt; Splitting 3 into R: #T = 799 #loc = 1</span></span>
+<span><span class="co">#&gt; Handling: #T = 799, #loc = 1, #loc/#T = 0.00125156445556946</span></span>
+<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.0626</span></span>
+<span><span class="co">#&gt; Splitting 2 into R: #T = 1598 #loc = 1</span></span>
+<span><span class="co">#&gt; Splitting 3 into L: #T = 799 #loc = 1</span></span>
+<span><span class="co">#&gt; Handling: #T = 799, #loc = 1, #loc/#T = 0.00125156445556946</span></span>
+<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.0613</span></span>
+<span><span class="co">#&gt; Splitting 3 into R: #T = 799 #loc = 1</span></span>
+<span><span class="co">#&gt; Handling: #T = 799, #loc = 1, #loc/#T = 0.00125156445556946</span></span>
+<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.0663</span></span>
+<span><span class="va">D0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums-methods.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">mesh</span><span class="op">$</span><span class="va">loc</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">^</span><span class="fl">0.5</span></span>
 <span></span>
 <span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>dist <span class="op">=</span> <span class="va">D0</span>,</span>
 <span>                           covariance <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/solve-methods.html" class="external-link">solve</a></span><span class="op">(</span><span class="va">Q</span>, <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">A0</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                           exponential <span class="op">=</span> <span class="fl">2</span><span class="op">^</span><span class="fl">2</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="op">-</span><span class="va">D0</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fl">8</span> <span class="op">*</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">/</span> <span class="fl">1.5</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">dist</span>, <span class="va">covariance</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">dist</span>, <span class="va">exponential</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spde3d_files/figure-html/unnamed-chunk-8-1.png" width="700">
+<p><img src="spde3d_files/figure-html/unnamed-chunk-8-1.png" alt="Spatial covariance function. A solid curve shows the theoretical covariance. Points show the numerical approximation covariance." width="700">
 We can see some boundary effect due to the finite domain but overall the
 covariances follow the theory.</p>
 <p>Let’s simulate a field and observe at some locations (here chosen as
@@ -230,36 +215,36 @@ a subset of the mesh points):</p>
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/INLA/man/qsample.html" class="external-link">inla.qsample</a></span><span class="op">(</span><span class="fl">1</span>, <span class="va">Q</span><span class="op">)</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span></span>
 <span><span class="va">loc</span> <span class="op">&lt;-</span> <span class="va">mesh</span><span class="op">$</span><span class="va">loc</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span>, , drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span></span>
 <span><span class="va">Aobs</span> <span class="op">&lt;-</span> <span class="fu">inlamesh3d</span><span class="fu">::</span><span class="fu"><a href="../reference/inla.spde.make.A.html">inla.spde.make.A</a></span><span class="op">(</span><span class="va">mesh</span>, <span class="va">loc</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Splitting 1 into L: #T = 3216 #loc = 100</span></span>
-<span><span class="co">#&gt; Splitting 2 into L: #T = 1608 #loc = 89</span></span>
-<span><span class="co">#&gt; Splitting 3 into L: #T = 804 #loc = 75</span></span>
-<span><span class="co">#&gt; Handling: #T = 804, #loc = 75, #loc/#T = 0.0932835820895522</span></span>
-<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.498</span></span>
-<span><span class="co">#&gt; Splitting 3 into R: #T = 804 #loc = 89</span></span>
-<span><span class="co">#&gt; Handling: #T = 804, #loc = 89, #loc/#T = 0.110696517412935</span></span>
-<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.481</span></span>
-<span><span class="co">#&gt; Splitting 2 into R: #T = 1608 #loc = 94</span></span>
-<span><span class="co">#&gt; Splitting 3 into L: #T = 804 #loc = 93</span></span>
-<span><span class="co">#&gt; Handling: #T = 804, #loc = 93, #loc/#T = 0.115671641791045</span></span>
-<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.479</span></span>
-<span><span class="co">#&gt; Splitting 3 into R: #T = 804 #loc = 93</span></span>
-<span><span class="co">#&gt; Handling: #T = 804, #loc = 93, #loc/#T = 0.115671641791045</span></span>
-<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.486</span></span>
-<span><span class="co">#&gt; Splitting 1 into R: #T = 3216 #loc = 97</span></span>
-<span><span class="co">#&gt; Splitting 2 into L: #T = 1608 #loc = 81</span></span>
-<span><span class="co">#&gt; Splitting 3 into L: #T = 804 #loc = 71</span></span>
-<span><span class="co">#&gt; Handling: #T = 804, #loc = 71, #loc/#T = 0.0883084577114428</span></span>
-<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.371</span></span>
-<span><span class="co">#&gt; Splitting 3 into R: #T = 804 #loc = 81</span></span>
-<span><span class="co">#&gt; Handling: #T = 804, #loc = 81, #loc/#T = 0.100746268656716</span></span>
-<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.41</span></span>
-<span><span class="co">#&gt; Splitting 2 into R: #T = 1608 #loc = 96</span></span>
-<span><span class="co">#&gt; Splitting 3 into L: #T = 804 #loc = 85</span></span>
-<span><span class="co">#&gt; Handling: #T = 804, #loc = 85, #loc/#T = 0.105721393034826</span></span>
-<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.429</span></span>
-<span><span class="co">#&gt; Splitting 3 into R: #T = 804 #loc = 93</span></span>
-<span><span class="co">#&gt; Handling: #T = 804, #loc = 93, #loc/#T = 0.115671641791045</span></span>
-<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.474</span></span>
+<span><span class="co">#&gt; Splitting 1 into L: #T = 3196 #loc = 93</span></span>
+<span><span class="co">#&gt; Splitting 2 into L: #T = 1598 #loc = 87</span></span>
+<span><span class="co">#&gt; Splitting 3 into L: #T = 799 #loc = 70</span></span>
+<span><span class="co">#&gt; Handling: #T = 799, #loc = 70, #loc/#T = 0.0876095118898623</span></span>
+<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.572</span></span>
+<span><span class="co">#&gt; Splitting 3 into R: #T = 799 #loc = 85</span></span>
+<span><span class="co">#&gt; Handling: #T = 799, #loc = 85, #loc/#T = 0.106382978723404</span></span>
+<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.625</span></span>
+<span><span class="co">#&gt; Splitting 2 into R: #T = 1598 #loc = 68</span></span>
+<span><span class="co">#&gt; Splitting 3 into L: #T = 799 #loc = 51</span></span>
+<span><span class="co">#&gt; Handling: #T = 799, #loc = 51, #loc/#T = 0.0638297872340425</span></span>
+<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.477</span></span>
+<span><span class="co">#&gt; Splitting 3 into R: #T = 799 #loc = 58</span></span>
+<span><span class="co">#&gt; Handling: #T = 799, #loc = 58, #loc/#T = 0.0725907384230288</span></span>
+<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.541</span></span>
+<span><span class="co">#&gt; Splitting 1 into R: #T = 3196 #loc = 98</span></span>
+<span><span class="co">#&gt; Splitting 2 into L: #T = 1598 #loc = 91</span></span>
+<span><span class="co">#&gt; Splitting 3 into L: #T = 799 #loc = 73</span></span>
+<span><span class="co">#&gt; Handling: #T = 799, #loc = 73, #loc/#T = 0.0913642052565707</span></span>
+<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.587</span></span>
+<span><span class="co">#&gt; Splitting 3 into R: #T = 799 #loc = 64</span></span>
+<span><span class="co">#&gt; Handling: #T = 799, #loc = 64, #loc/#T = 0.0801001251564456</span></span>
+<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.558</span></span>
+<span><span class="co">#&gt; Splitting 2 into R: #T = 1598 #loc = 91</span></span>
+<span><span class="co">#&gt; Splitting 3 into L: #T = 799 #loc = 76</span></span>
+<span><span class="co">#&gt; Handling: #T = 799, #loc = 76, #loc/#T = 0.0951188986232791</span></span>
+<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.616</span></span>
+<span><span class="co">#&gt; Splitting 3 into R: #T = 799 #loc = 65</span></span>
+<span><span class="co">#&gt; Handling: #T = 799, #loc = 65, #loc/#T = 0.081351689612015</span></span>
+<span><span class="co">#&gt; Handled: Time/(10^3 Tetra) = 0.502</span></span>
 <span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="va">Aobs</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">x</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">loc</span><span class="op">)</span>, sd <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">stk</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/INLA/man/inla.stack.html" class="external-link">inla.stack</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">y</span><span class="op">)</span>,</span>
@@ -290,27 +275,32 @@ user-interpretable scale:</p>
 <tbody>
 <tr class="odd">
 <td align="left">range</td>
-<td align="right">0.975210</td>
-<td align="right">1.4179927</td>
-<td align="right">2.1494603</td>
+<td align="right">1.314196</td>
+<td align="right">1.8674445</td>
+<td align="right">2.7939812</td>
 </tr>
 <tr class="even">
 <td align="left">sigma</td>
-<td align="right">1.684300</td>
-<td align="right">1.9524363</td>
-<td align="right">2.2813063</td>
+<td align="right">1.880459</td>
+<td align="right">2.1950667</td>
+<td align="right">2.5944652</td>
 </tr>
 <tr class="odd">
 <td align="left">obs_sigma</td>
-<td align="right">0.003405</td>
-<td align="right">0.0085184</td>
-<td align="right">0.0252944</td>
+<td align="right">0.003226</td>
+<td align="right">0.0085915</td>
+<td align="right">0.0300309</td>
 </tr>
 </tbody>
 </table>
 <p>The observation noise standard deviation is underestimated (true
-value was <span class="math inline">\(0.1\)</span>), but the range and
-sigma parameters recover the true values, <span class="math inline">\(1.5\)</span> and <span class="math inline">\(2\)</span>, respectively.</p>
+value was
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>0.1</mn><annotation encoding="application/x-tex">0.1</annotation></semantics></math>),
+but the range and sigma parameters recover the true values,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>1.5</mn><annotation encoding="application/x-tex">1.5</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>2</mn><annotation encoding="application/x-tex">2</annotation></semantics></math>,
+respectively.</p>
 </div>
 <div class="section level2">
 <h2 id="plotting">Plotting<a class="anchor" aria-label="anchor" href="#plotting"></a>
@@ -362,54 +352,45 @@ range (<code>range</code>) and field standard deviation
 <tbody>
 <tr class="odd">
 <td align="left">range</td>
-<td align="right">0.9654440</td>
-<td align="right">1.4234491</td>
-<td align="right">2.1911755</td>
+<td align="right">1.3181967</td>
+<td align="right">1.9153010</td>
+<td align="right">2.9677936</td>
 </tr>
 <tr class="even">
 <td align="left">sigma</td>
-<td align="right">1.6906556</td>
-<td align="right">1.9639792</td>
-<td align="right">2.2999191</td>
+<td align="right">1.8920266</td>
+<td align="right">2.2199233</td>
+<td align="right">2.6431318</td>
 </tr>
 <tr class="odd">
 <td align="left">obs_sigma</td>
-<td align="right">0.0034785</td>
-<td align="right">0.0083007</td>
-<td align="right">0.0252389</td>
+<td align="right">0.0033967</td>
+<td align="right">0.0083308</td>
+<td align="right">0.0263148</td>
 </tr>
 </tbody>
 </table>
 </div>
-  </div>
-
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-
-        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
-    </nav>
-</div>
-
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
 
-      <footer><div class="copyright">
-  <p></p>
-<p>Developed by Finn Lindgren.</p>
+    <footer><div class="pkgdown-footer-left">
+  <p>Developed by Finn Lindgren.</p>
 </div>
 
-<div class="pkgdown">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<div class="pkgdown-footer-right">
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
 </div>
 
-      </footer>
+    </footer>
 </div>
 
-  
 
 
-  
+
 
   </body>
 </html>
