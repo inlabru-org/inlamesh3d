@@ -1,0 +1,22 @@
+url: https://inlabru-org.github.io/inlamesh3d/
+
+template:
+  bootstrap: 5
+
+navbar:
+  structure:
+    left: [home, intro, reference, articles, news]
+    right: [search, github]
+  components:
+    articles:
+      text: Articles
+      menu:
+      - text: SPDE models on 3D meshes
+        href: articles/spde3d.html
+
+reference:
+- title: "Methods"
+  desc: "Special methods for 3D meshes."
+  contents:
+  - matches("")
+

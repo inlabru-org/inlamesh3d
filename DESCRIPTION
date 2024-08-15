@@ -2,12 +2,13 @@ Package: inlamesh3d
 Title: 3D Mesh/SPDE Feature for INLA
 Version: 0.0.0.9001
 Authors@R: 
-    person(given = "Finn",
-           family = "Lindgren",
-           role = c("aut", "cre"),
-           email = "finn.lindgren@gmail.com")
+    person("Finn", "Lindgren", email = "finn.lindgren@gmail.com",
+         role = c("aut", "cre", "cph"),
+         comment = c(ORCID = "0000-0002-5833-2011"))
 Description: Provides functions for creating an SPDE model for a
   tetrahedralisation of a 3D domain.
+URL: https://inlabru-org.github.io/inlamesh3d/, https://github.com/inlabru-org/inlamesh3d
+BugReports: https://github.com/inlabru-org/inlamesh3d/issues
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

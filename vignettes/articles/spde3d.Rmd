@@ -90,7 +90,7 @@ spde <- inlamesh3d::inla.spde2.matern(
 
 The parameterisation is in log-range and log-sigma relative to the prior medians, so that
 `theta = log(c(range, sigma) / c(range0, sigma0))` is used to specify the internal parameter vector:
-```{r}
+```{r fig.alt="Spatial covariance function. A solid curve shows the theoretical covariance. Points show the numerical approximation covariance."}
 Q <- inla.spde2.precision(spde, theta = log(c(1.5, 2) / c(range0, sigma0)))
 A0 <- inlamesh3d::inla.spde.make.A(mesh, cbind(0,0,0))
 D0 <- rowSums(mesh$loc^2)^0.5
