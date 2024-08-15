@@ -30,6 +30,8 @@ inla.spde2.pcmatern3d(
 \item{mesh}{The mesh to build the model on, as an \code{\link[=inla.mesh]{inla.mesh()}} or
 \code{\link[=inla.mesh.1d]{inla.mesh.1d()}} object.}
 
+\item{...}{Further arguments passed to submethods.}
+
 \item{alpha}{Fractional operator order, \eqn{0<\alpha\leq 2}{0 < alpha <= 2}
 supported, for \eqn{\nu=\alpha-d/2>0}.}
 

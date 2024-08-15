@@ -2,18 +2,19 @@
 % Please edit documentation in R/mesh3d.R
 \name{inla.spde.make.A}
 \alias{inla.spde.make.A}
-\alias{inla.spde.make.A.inla_mesh_3d}
-\alias{inla.spde.make.A.default}
+\alias{fm_basis.inla_mesh_3d}
 \title{FUNCTION_TITLE}
 \usage{
 inla.spde.make.A(mesh, ...)
 
-\method{inla.spde.make.A}{inla_mesh_3d}(mesh, ...)
-
-\method{inla.spde.make.A}{default}(mesh, ...)
+\method{fm_basis}{inla_mesh_3d}(x, ...)
 }
 \arguments{
 \item{mesh}{PARAM_DESCRIPTION}
+
+\item{...}{Passed on to \code{\link[fmesher:fm_basis]{fmesher::fm_basis()}}}
+
+\item{x}{3D mesh}
 }
 \value{
 OUTPUT_DESCRIPTION

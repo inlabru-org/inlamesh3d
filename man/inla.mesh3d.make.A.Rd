@@ -10,6 +10,8 @@ inla.mesh3d.make.A(mesh, loc, ...)
 \item{mesh}{PARAM_DESCRIPTION}
 
 \item{loc}{PARAM_DESCRIPTION}
+
+\item{...}{Unused}
 }
 \value{
 OUTPUT_DESCRIPTION

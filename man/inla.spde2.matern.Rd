@@ -69,6 +69,6 @@ if (interactive()) {
 }
 }
 \seealso{
-\code{\link{param2.matern3d}},\code{\link{param2.matern_calc}}
+\code{\link[=param2.matern]{param2.matern()}}, \code{\link[=param2.matern_calc]{param2.matern_calc()}}
 }
 \keyword{Internal}

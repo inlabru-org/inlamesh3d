@@ -2,17 +2,14 @@
 % Please edit documentation in R/mesh3d.R
 \name{inla.mesh.fem}
 \alias{inla.mesh.fem}
-\alias{inla.mesh.fem.inla_mesh_3d}
-\alias{inla.mesh.fem.default}
+\alias{fm_fem.inla_mesh_3d}
 \alias{inla.mesh3d.fem}
 \alias{inla.mesh3d.volumes}
 \title{FUNCTION_TITLE}
 \usage{
 inla.mesh.fem(mesh, ...)
 
-\method{inla.mesh.fem}{inla_mesh_3d}(mesh, ...)
-
-\method{inla.mesh.fem}{default}(mesh, ...)
+\method{fm_fem}{inla_mesh_3d}(mesh, order = 2, ...)
 
 inla.mesh3d.fem(mesh, ...)
 
@@ -20,6 +17,10 @@ inla.mesh3d.volumes(mesh, ...)
 }
 \arguments{
 \item{mesh}{PARAM_DESCRIPTION}
+
+\item{...}{Additional arguments for submethods}
+
+\item{order}{integer}
 }
 \value{
 OUTPUT_DESCRIPTION

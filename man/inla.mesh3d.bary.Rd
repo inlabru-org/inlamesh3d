@@ -10,6 +10,10 @@ inla.mesh3d.bary(mesh, loc, divide_along = 1, t_subset = NULL)
 \item{mesh}{PARAM_DESCRIPTION}
 
 \item{loc}{PARAM_DESCRIPTION}
+
+\item{divide_along}{PARAM_DESCRIPTION}
+
+\item{t_subset}{PARAM_DESCRIPTION}
 }
 \value{
 OUTPUT_DESCRIPTION

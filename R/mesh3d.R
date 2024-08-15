@@ -33,7 +33,8 @@ inla.mesh3d <- function(loc, tv) {
 
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION
-#' @param mesh PARAM_DESCRIPTION
+#' @param mesh A mesh object
+#' @param ... Additional arguments for submethods
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
 #' @examples
@@ -43,26 +44,22 @@ inla.mesh3d <- function(loc, tv) {
 #' }
 #' }
 #' @rdname inla.mesh.fem
+#' @importFrom fmesher fm_fem
 #' @export
 
 inla.mesh.fem <- function(mesh,
                           ...) {
-  UseMethod("inla.mesh.fem", mesh)
+  fm_fem(mesh, ...)
 }
 
 #' @export
+#' @param order integer
 #' @rdname inla.mesh.fem
 
-inla.mesh.fem.inla_mesh_3d <- function(mesh, ...) {
-  inla.mesh3d.fem(mesh, ...)
+fm_fem.inla_mesh_3d <- function(mesh, order = 2, ...) {
+  inla.mesh3d.fem(mesh, order = order, ...)
 }
 
-#' @export
-#' @rdname inla.mesh.fem
-
-inla.mesh.fem.default <- function(mesh, ...) {
-  INLA::inla.mesh.fem(mesh, ...)
-}
 
 
 #' @title FUNCTION_TITLE
@@ -202,6 +199,7 @@ inla.mesh3d.volumes <- function(mesh, ...) {
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION
 #' @param mesh PARAM_DESCRIPTION
+#' @param ... Passed on to [fmesher::fm_basis()]
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
 #' @examples
@@ -212,24 +210,19 @@ inla.mesh3d.volumes <- function(mesh, ...) {
 #' }
 #' @rdname inla.spde.make.A
 #' @export
+#' @importFrom fmesher fm_basis
 
 inla.spde.make.A <- function(mesh,
                              ...) {
-  UseMethod("inla.spde.make.A", mesh)
+  fm_basis(mesh, ...)
 }
 
 #' @export
+#' @param x 3D mesh
 #' @rdname inla.spde.make.A
 
-inla.spde.make.A.inla_mesh_3d <- function(mesh, ...) {
-  inla.mesh3d.make.A(mesh, ...)
-}
-
-#' @export
-#' @rdname inla.spde.make.A
-
-inla.spde.make.A.default <- function(mesh, ...) {
-  INLA::inla.spde.make.A(mesh, ...)
+fm_basis.inla_mesh_3d <- function(x, ...) {
+  inla.mesh3d.make.A(x, ...)
 }
 
 
@@ -237,6 +230,8 @@ inla.spde.make.A.default <- function(mesh, ...) {
 #' @description FUNCTION_DESCRIPTION
 #' @param mesh PARAM_DESCRIPTION
 #' @param loc PARAM_DESCRIPTION
+#' @param divide_along PARAM_DESCRIPTION
+#' @param t_subset PARAM_DESCRIPTION
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
 #' @examples
@@ -364,6 +359,7 @@ inla.mesh3d.bary.old <- function(mesh, loc) {
 #' @description FUNCTION_DESCRIPTION
 #' @param mesh PARAM_DESCRIPTION
 #' @param loc PARAM_DESCRIPTION
+#' @param ... Unused
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
 #' @examples
@@ -407,6 +403,7 @@ inla.mesh3d.make.A <- function(mesh, loc, ...) {
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION
 #' @param mesh PARAM_DESCRIPTION
+#' @param ... Passed on to submethods
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
 #' @examples
@@ -456,7 +453,7 @@ inla.spde2.matern.default <- function(mesh, ...) {
 #' }
 #' }
 #' @seealso
-#'  \code{\link{param2.matern3d}},\code{\link{param2.matern_calc}}
+#'  [param2.matern()], [param2.matern_calc()]
 #' @rdname inla.spde2.matern
 #' @keywords Internal
 #' @importFrom Matrix Diagonal
@@ -753,6 +750,7 @@ inla.spde2.matern3d <-
 #' that \eqn{P(\sigma > \sigma_0)=p_\sigma}, where \eqn{\sigma} is the marginal
 #' standard deviation of the field.  If `Psigma` is `NA`, then
 #' `sigma0` is used as a fixed range value.
+#' @param ... Further arguments passed to submethods.
 #' @return An `inla.spde2` object.
 #' @author Finn Lindgren \email{finn.lindgren@@gmail.com}
 #' @seealso [inla.mesh.2d()], [inla.mesh.create()],
@@ -1079,7 +1077,6 @@ construct_prior <- function(B_range, B_sigma,
 #'   # EXAMPLE1
 #' }
 #' }
-#' @rdname param2.matern
 #' @export
 #'
 
@@ -1204,6 +1201,7 @@ param2.matern_calc <-
 #' (draw all tetrahedra)
 #' @param size Vertex size, in pixels
 #' @param lwd Edge width, in pixels
+#' @param fill_col Fill color specification for triangles, Default: NULL
 #' @param add If TRUE, adds to an existing `rgl` device, Default: FALSE
 #' @param ... Further parameters passed through to the rgl plotting functions
 #' @examples

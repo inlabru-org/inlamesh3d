@@ -33,6 +33,8 @@
 
 \item{lwd}{Edge width, in pixels}
 
+\item{fill_col}{Fill color specification for triangles, Default: NULL}
+
 \item{add}{If TRUE, adds to an existing \code{rgl} device, Default: FALSE}
 
 \item{...}{Further parameters passed through to the rgl plotting functions}
