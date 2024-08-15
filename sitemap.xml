@@ -3,6 +3,7 @@
 <url><loc>https://inlabru-org.github.io/inlamesh3d/LICENSE.html</loc></url>
 <url><loc>https://inlabru-org.github.io/inlamesh3d/articles/index.html</loc></url>
 <url><loc>https://inlabru-org.github.io/inlamesh3d/articles/spde3d.html</loc></url>
+<url><loc>https://inlabru-org.github.io/inlamesh3d/articles/spde3d_noeval.html</loc></url>
 <url><loc>https://inlabru-org.github.io/inlamesh3d/authors.html</loc></url>
 <url><loc>https://inlabru-org.github.io/inlamesh3d/index.html</loc></url>
 <url><loc>https://inlabru-org.github.io/inlamesh3d/news/index.html</loc></url>
@@ -15,6 +16,7 @@
 <url><loc>https://inlabru-org.github.io/inlamesh3d/reference/inla.spde2.matern.html</loc></url>
 <url><loc>https://inlabru-org.github.io/inlamesh3d/reference/inla.spde2.pcmatern.html</loc></url>
 <url><loc>https://inlabru-org.github.io/inlamesh3d/reference/param2.matern.html</loc></url>
+<url><loc>https://inlabru-org.github.io/inlamesh3d/reference/param2.matern_calc.html</loc></url>
 <url><loc>https://inlabru-org.github.io/inlamesh3d/reference/plot.inla_mesh_3d.html</loc></url>
 <url><loc>https://inlabru-org.github.io/inlamesh3d/reference/row_cross_product.html</loc></url>
 <url><loc>https://inlabru-org.github.io/inlamesh3d/reference/row_volume_product.html</loc></url>
