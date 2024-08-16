@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">inlamesh3d</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9003</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9005</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,7 +57,7 @@
 </h1></div>
 <!-- badges: start -->
 <!-- badges: end -->
-<p>The goal of <code>inlamesh3d</code> is to add 3D mesh functionality to INLA. When the methods have been tested, they will be incorporated into the main package instead.</p>
+<p>The goal of <code>inlamesh3d</code> is to add 3D mesh functionality to fmesher and INLA. When the methods have been tested, they will be incorporated into the main packages instead.</p>
 <p>For online documentation, see <a href="https://inlabru-org.github.io/inlamesh3d/" class="uri">https://inlabru-org.github.io/inlamesh3d/</a></p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -74,12 +74,12 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressPackageStartupMessages</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">INLA</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://inlabru-org.github.io/inlamesh3d/">inlamesh3d</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Loading required package: fmesher</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Attaching package: 'inlamesh3d'</span></span>
 <span><span class="co">#&gt; The following objects are masked from 'package:INLA':</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     inla.mesh.fem, inla.spde.make.A, inla.spde2.matern,</span></span>
-<span><span class="co">#&gt;     inla.spde2.pcmatern</span></span>
+<span><span class="co">#&gt;     inla.spde2.matern, inla.spde2.pcmatern</span></span>
 <span><span class="va">loc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">12</span><span class="op">)</span>, <span class="fl">4</span>, <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="va">tv</span> <span class="op">&lt;-</span> <span class="fu">geometry</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/geometry/man/delaunayn.html" class="external-link">delaunayn</a></span><span class="op">(</span><span class="va">loc</span><span class="op">)</span></span>
 <span><span class="va">mesh</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/inla.mesh3d.html">inla.mesh3d</a></span><span class="op">(</span><span class="va">loc</span>, <span class="va">tv</span><span class="op">)</span></span>
@@ -87,11 +87,11 @@
 <span><span class="co">#&gt; List of 4</span></span>
 <span><span class="co">#&gt;  $ manifold: chr "R3"</span></span>
 <span><span class="co">#&gt;  $ n       : int 4</span></span>
-<span><span class="co">#&gt;  $ loc     : num [1:4, 1:3] -0.6966 -1.6271 -0.2991 -0.0789 -0.2513 ...</span></span>
+<span><span class="co">#&gt;  $ loc     : num [1:4, 1:3] -0.7103 -0.7264 -1.0812 1.5949 -0.0406 ...</span></span>
 <span><span class="co">#&gt;  $ graph   :List of 1</span></span>
-<span><span class="co">#&gt;   ..$ tv: int [1, 1:4] 1 3 4 2</span></span>
-<span><span class="co">#&gt;  - attr(*, "class")= chr "inla_mesh_3d"</span></span></code></pre></div>
-<p>New versions of <code>inla.spde2.matern</code>, <code>inla.spde.make.A</code> and <code>inla.mesh.fem</code> are now available to use in much the same way as for 2D meshes.</p>
+<span><span class="co">#&gt;   ..$ tv: int [1, 1:4] 1 2 4 3</span></span>
+<span><span class="co">#&gt;  - attr(*, "class")= chr [1:2] "inla_mesh_3d" "inla.mesh"</span></span></code></pre></div>
+<p>New version of <code>inla.spde2.matern</code>, as well as <code><a href="https://inlabru-org.github.io/fmesher/reference/fm_basis.html" class="external-link">fm_basis()</a></code>, <code><a href="https://inlabru-org.github.io/fmesher/reference/fm_evaluate.html" class="external-link">fm_evaluator()</a></code>, and <code><a href="https://inlabru-org.github.io/fmesher/reference/fm_fem.html" class="external-link">fm_fem()</a></code> methods are now available to use in much the same way as for 2D meshes.</p>
 <p>For a full example, see <code>vignette("spde3d")</code>.</p>
 </div>
 </div>

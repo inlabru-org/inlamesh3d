@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">inlamesh3d</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9003</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9005</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -90,7 +90,7 @@ tetrahedron:</p>
 <p>The finite element structure matrices can be obtained in the same way
 as for the traditional 2D triangle meshes:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fem</span> <span class="op">&lt;-</span> <span class="fu">inlamesh3d</span><span class="fu">::</span><span class="fu"><a href="../reference/inla.mesh.fem.html">inla.mesh.fem</a></span><span class="op">(</span><span class="va">mesh</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">fem</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://inlabru-org.github.io/fmesher/reference/fm_fem.html" class="external-link">fm_fem</a></span><span class="op">(</span><span class="va">mesh</span><span class="op">)</span></span></code></pre></div>
 <p>We can extract the matrices to construct a precision matrix manually,
 for
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>∇</mi><mo>⋅</mo><mi>∇</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>u</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mover><mi>W</mi><mo accent="true">̇</mo></mover><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">(1-\nabla\cdot\nabla)u(s)=\dot{W}(s)</annotation></semantics></math>:</p>
@@ -123,7 +123,7 @@ and
 <p>Mapping data locations works the same as before. Here we verify that
 mapping the mesh vertices themselves produces an identity matrix:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">A</span> <span class="op">&lt;-</span> <span class="fu">inlamesh3d</span><span class="fu">::</span><span class="fu"><a href="../reference/inla.spde.make.A.html">inla.spde.make.A</a></span><span class="op">(</span><span class="va">mesh</span>, <span class="va">mesh</span><span class="op">$</span><span class="va">loc</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">A</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/inla.spde.make.A.html">inla.spde.make.A</a></span><span class="op">(</span><span class="va">mesh</span>, <span class="va">mesh</span><span class="op">$</span><span class="va">loc</span><span class="op">)</span></span>
 <span><span class="va">A</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -150,7 +150,7 @@ prior medians, so that
 specify the internal parameter vector:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Q</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/INLA/man/inla.spde.precision.html" class="external-link">inla.spde2.precision</a></span><span class="op">(</span><span class="va">spde</span>, theta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.5</span>, <span class="fl">2</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">range0</span>, <span class="va">sigma0</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">A0</span> <span class="op">&lt;-</span> <span class="fu">inlamesh3d</span><span class="fu">::</span><span class="fu"><a href="../reference/inla.spde.make.A.html">inla.spde.make.A</a></span><span class="op">(</span><span class="va">mesh</span>, <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">A0</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/inla.spde.make.A.html">inla.spde.make.A</a></span><span class="op">(</span><span class="va">mesh</span>, <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">D0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums-methods.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">mesh</span><span class="op">$</span><span class="va">loc</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">^</span><span class="fl">0.5</span></span>
 <span></span>
 <span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
@@ -167,7 +167,7 @@ a subset of the mesh points):</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/INLA/man/qsample.html" class="external-link">inla.qsample</a></span><span class="op">(</span><span class="fl">1</span>, <span class="va">Q</span><span class="op">)</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span></span>
 <span><span class="va">loc</span> <span class="op">&lt;-</span> <span class="va">mesh</span><span class="op">$</span><span class="va">loc</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span>, , drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span></span>
-<span><span class="va">Aobs</span> <span class="op">&lt;-</span> <span class="fu">inlamesh3d</span><span class="fu">::</span><span class="fu"><a href="../reference/inla.spde.make.A.html">inla.spde.make.A</a></span><span class="op">(</span><span class="va">mesh</span>, <span class="va">loc</span><span class="op">)</span></span>
+<span><span class="va">Aobs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/inla.spde.make.A.html">inla.spde.make.A</a></span><span class="op">(</span><span class="va">mesh</span>, <span class="va">loc</span><span class="op">)</span></span>
 <span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="va">Aobs</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">x</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">loc</span><span class="op">)</span>, sd <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">stk</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/INLA/man/inla.stack.html" class="external-link">inla.stack</a></span><span class="op">(</span></span>
