@@ -1,6 +1,6 @@
 Package: inlamesh3d
 Title: 3D Mesh/SPDE Feature for INLA
-Version: 0.0.0.9004
+Version: 0.0.0.9005
 Authors@R: 
     person("Finn", "Lindgren", email = "finn.lindgren@gmail.com",
          role = c("aut", "cre", "cph"),

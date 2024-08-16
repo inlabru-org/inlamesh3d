@@ -223,6 +223,7 @@ fm_basis.inla_mesh_3d <- function(x, ...) {
 
 #' @export
 #' @rdname inla.spde.make.A
+#' @importFrom fmesher fm_evaluator
 
 fm_evaluator.inla_mesh_3d <- function(mesh, loc = NULL, ...) {
   structure(
