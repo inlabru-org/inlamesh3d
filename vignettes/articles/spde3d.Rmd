@@ -40,7 +40,7 @@ mesh <- inla.mesh3d(
 The finite element structure matrices can be obtained in the same way as for
 the traditional 2D triangle meshes:
 ```{r}
-fem <- inlamesh3d::inla.mesh.fem(mesh)
+fem <- fm_fem(mesh)
 ```
 
 We can extract the matrices to construct a precision matrix manually, for
@@ -73,7 +73,7 @@ deviation instead of $\tau$ and $\kappa$.
 
 Mapping data locations works the same as before. Here we verify that mapping the mesh vertices themselves produces an identity matrix:
 ```{r}
-A <- inlamesh3d::inla.spde.make.A(mesh, mesh$loc)
+A <- inla.spde.make.A(mesh, mesh$loc)
 A
 ```
 
@@ -100,7 +100,7 @@ The parameterisation is in log-range and log-sigma relative to the prior medians
 `theta = log(c(range, sigma) / c(range0, sigma0))` is used to specify the internal parameter vector:
 ```{r fig.alt="Spatial covariance function. A solid curve shows the theoretical covariance. Points show the numerical approximation covariance."}
 Q <- inla.spde2.precision(spde, theta = log(c(1.5, 2) / c(range0, sigma0)))
-A0 <- inlamesh3d::inla.spde.make.A(mesh, cbind(0, 0, 0))
+A0 <- inla.spde.make.A(mesh, cbind(0, 0, 0))
 D0 <- rowSums(mesh$loc^2)^0.5
 
 ggplot2::ggplot(data.frame(
@@ -118,7 +118,7 @@ Let's simulate a field and observe at some locations (here chosen as a subset of
 ```{r}
 x <- inla.qsample(1, Q)[, 1]
 loc <- mesh$loc[seq_len(100), , drop = FALSE]
-Aobs <- inlamesh3d::inla.spde.make.A(mesh, loc)
+Aobs <- inla.spde.make.A(mesh, loc)
 data <- data.frame(y = as.vector(Aobs %*% x) + rnorm(nrow(loc), sd = 0.1))
 ```
 

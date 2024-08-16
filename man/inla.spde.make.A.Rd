@@ -3,18 +3,19 @@
 \name{inla.spde.make.A}
 \alias{inla.spde.make.A}
 \alias{fm_basis.inla_mesh_3d}
+\alias{fm_evaluator.inla_mesh_3d}
 \title{FUNCTION_TITLE}
 \usage{
-inla.spde.make.A(mesh, ...)
-
 \method{fm_basis}{inla_mesh_3d}(x, ...)
+
+\method{fm_evaluator}{inla_mesh_3d}(mesh, loc = NULL, ...)
 }
 \arguments{
-\item{mesh}{PARAM_DESCRIPTION}
+\item{x}{3D mesh}
 
 \item{...}{Passed on to \code{\link[fmesher:fm_basis]{fmesher::fm_basis()}}}
 
-\item{x}{3D mesh}
+\item{mesh}{An \code{inla_mesh_3d} mesh}
 }
 \value{
 OUTPUT_DESCRIPTION

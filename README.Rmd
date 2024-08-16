@@ -18,9 +18,9 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of `inlamesh3d` is to add 3D mesh functionality to INLA.
+The goal of `inlamesh3d` is to add 3D mesh functionality to fmesher and INLA.
 When the methods have been tested, they will be incorporated into the main
-package instead.
+packages instead.
 
 For online documentation,
 see [https://inlabru-org.github.io/inlamesh3d/](https://inlabru-org.github.io/inlamesh3d/)
@@ -46,7 +46,7 @@ tv <- geometry::delaunayn(loc)
 mesh <- inla.mesh3d(loc, tv)
 str(mesh)
 ```
-New versions of `inla.spde2.matern`, `inla.spde.make.A` and `inla.mesh.fem`
-are now available to use in much the same way as for 2D meshes.
+New version of `inla.spde2.matern`, as well as `fm_basis()`, `fm_evaluator()`,
+and `fm_fem()` methods are now available to use in much the same way as for 2D meshes.
 
 For a full example, see `vignette("spde3d")`.

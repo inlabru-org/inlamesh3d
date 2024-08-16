@@ -24,7 +24,9 @@ inla.mesh3d <- function(loc, tv) {
     loc = as.matrix(loc),
     graph = list(tv = as.matrix(tv))
   )
-  class(mesh) <- "inla_mesh_3d"
+  # Temporarily inherit from "inla.mesh" until INLA::inla.spde.make.A and
+  # other methods have correct inheritance checks
+  class(mesh) <- c("inla_mesh_3d", "inla.mesh")
   mesh
 }
 
@@ -43,18 +45,10 @@ inla.mesh3d <- function(loc, tv) {
 #'   # EXAMPLE1
 #' }
 #' }
-#' @rdname inla.mesh.fem
 #' @importFrom fmesher fm_fem
 #' @export
-
-inla.mesh.fem <- function(mesh,
-                          ...) {
-  fm_fem(mesh, ...)
-}
-
-#' @export
 #' @param order integer
-#' @rdname inla.mesh.fem
+#' @rdname fm_fem
 
 fm_fem.inla_mesh_3d <- function(mesh, order = 2, ...) {
   inla.mesh3d.fem(mesh, order = order, ...)
@@ -116,7 +110,7 @@ row_volume_product <- function(e1, e2, e3) {
 #'   # EXAMPLE1
 #' }
 #' }
-#' @rdname inla.mesh.fem
+#' @rdname fm_fem
 #' @export
 #' @importFrom Matrix sparseMatrix diag
 inla.mesh3d.fem <- function(mesh, ...) {
@@ -174,7 +168,7 @@ inla.mesh3d.fem <- function(mesh, ...) {
 }
 
 
-#' @rdname inla.mesh.fem
+#' @rdname fm_fem
 #' @export
 #' @importFrom Matrix sparseMatrix diag
 inla.mesh3d.volumes <- function(mesh, ...) {
@@ -204,7 +198,7 @@ inla.mesh3d.volumes <- function(mesh, ...) {
 
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION
-#' @param mesh PARAM_DESCRIPTION
+#' @param mesh An `inla_mesh_3d` mesh
 #' @param ... Passed on to [fmesher::fm_basis()]
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
@@ -214,14 +208,10 @@ inla.mesh3d.volumes <- function(mesh, ...) {
 #'   # EXAMPLE1
 #' }
 #' }
+#' @name inla.spde.make.A
 #' @rdname inla.spde.make.A
-#' @export
 #' @importFrom fmesher fm_basis
-
-inla.spde.make.A <- function(mesh,
-                             ...) {
-  fm_basis(mesh, ...)
-}
+NULL
 
 #' @export
 #' @param x 3D mesh
@@ -229,6 +219,19 @@ inla.spde.make.A <- function(mesh,
 
 fm_basis.inla_mesh_3d <- function(x, ...) {
   inla.mesh3d.make.A(x, ...)
+}
+
+#' @export
+#' @rdname inla.spde.make.A
+
+fm_evaluator.inla_mesh_3d <- function(mesh, loc = NULL, ...) {
+  structure(
+    list(
+      loc = loc,
+      proj = list(A = inla.mesh3d.make.A(mesh, loc, ...))
+    ),
+    class = "fm_evaluator"
+  )
 }
 
 
